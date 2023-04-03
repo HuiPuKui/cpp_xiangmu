@@ -1,9 +1,0 @@
-# ninja log v5
-4	1413	7022126112644526	TcpClient_autogen/timestamp	fd06a1dc6686c4b7
-4	1413	7022126112644526	TcpClient_autogen/mocs_compilation.cpp	fd06a1dc6686c4b7
-4	1413	7022126112644526	C:/git_dir/cpp_xiangmu/C++wangpan/build-TcpClient-Desktop_Qt_6_5_0_MinGW_64_bit-Debug/TcpClient_autogen/timestamp	fd06a1dc6686c4b7
-4	1413	7022126112644526	C:/git_dir/cpp_xiangmu/C++wangpan/build-TcpClient-Desktop_Qt_6_5_0_MinGW_64_bit-Debug/TcpClient_autogen/mocs_compilation.cpp	fd06a1dc6686c4b7
-1414	3759	7022126139442905	CMakeFiles/TcpClient.dir/TcpClient_autogen/mocs_compilation.cpp.obj	2fa4c43418ed9af6
-1425	3855	7022126140449887	CMakeFiles/TcpClient.dir/tcpclient.cpp.obj	7019ab41ee7b605e
-1436	3901	7022126140909010	CMakeFiles/TcpClient.dir/main.cpp.obj	e2642f84ddb7c479
-3901	4171	7022126143547719	TcpClient.exe	63ed0e4fb0417528

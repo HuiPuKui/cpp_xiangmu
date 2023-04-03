@@ -1,18 +1,14 @@
-
 #include "tcpclient.h"
-#include "./ui_tcpclient.h"
+#include "ui_tcpclient.h"
 
-
-TcpClient::TcpClient(QWidget *parent)
-    : QWidget(parent)
-    , ui(new Ui::TcpClient)
-{
+TcpClient::TcpClient(QWidget *parent) : QWidget(parent), ui(new Ui::TcpClient) {
     ui->setupUi(this);
 }
 
-TcpClient::~TcpClient()
-{
+TcpClient::~TcpClient() {
     delete ui;
 }
 
+void TcpClient::loadConfig() {
 
+}
