@@ -1,0 +1,9 @@
+C:/git_dir/cpp_xiangmu/C++wangpan/build-TcpClient-Desktop_Qt_6_5_0_MinGW_64_bit-Debug/CMakeFiles/TcpClient.dir
+C:/git_dir/cpp_xiangmu/C++wangpan/build-TcpClient-Desktop_Qt_6_5_0_MinGW_64_bit-Debug/CMakeFiles/edit_cache.dir
+C:/git_dir/cpp_xiangmu/C++wangpan/build-TcpClient-Desktop_Qt_6_5_0_MinGW_64_bit-Debug/CMakeFiles/rebuild_cache.dir
+C:/git_dir/cpp_xiangmu/C++wangpan/build-TcpClient-Desktop_Qt_6_5_0_MinGW_64_bit-Debug/CMakeFiles/list_install_components.dir
+C:/git_dir/cpp_xiangmu/C++wangpan/build-TcpClient-Desktop_Qt_6_5_0_MinGW_64_bit-Debug/CMakeFiles/install.dir
+C:/git_dir/cpp_xiangmu/C++wangpan/build-TcpClient-Desktop_Qt_6_5_0_MinGW_64_bit-Debug/CMakeFiles/install/local.dir
+C:/git_dir/cpp_xiangmu/C++wangpan/build-TcpClient-Desktop_Qt_6_5_0_MinGW_64_bit-Debug/CMakeFiles/install/strip.dir
+C:/git_dir/cpp_xiangmu/C++wangpan/build-TcpClient-Desktop_Qt_6_5_0_MinGW_64_bit-Debug/CMakeFiles/TcpClient_autogen_timestamp_deps.dir
+C:/git_dir/cpp_xiangmu/C++wangpan/build-TcpClient-Desktop_Qt_6_5_0_MinGW_64_bit-Debug/CMakeFiles/TcpClient_autogen.dir
