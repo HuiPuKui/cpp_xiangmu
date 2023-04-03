@@ -8,8 +8,7 @@ namespace Ui {
 class TcpClient;
 }
 
-class TcpClient : public QWidget
-{
+class TcpClient : public QWidget {
     Q_OBJECT
 
 public:
