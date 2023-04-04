@@ -16,7 +16,7 @@ public:
     ~TcpClient();
     void loadConfig(); // 初始化，加载配置
 
-public slots: // 槽函数
+public slots:           // 槽函数
     void showConnect();
 
 private:
