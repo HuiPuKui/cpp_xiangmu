@@ -40,3 +40,17 @@ void TcpClient::loadConfig() { // 初始化
 void TcpClient::showConnect() { // 信号处理函数
     QMessageBox::information(this, "连接服务器", "连接服务器成功");
 }
+
+void TcpClient::on_send_pb_clicked() {
+    QString strMsg = ui->lineEdit->text();
+    if (!strMsg.isEmpty()) {                                                // 如果信息非空
+        PDU *pdu = mkPDU(strMsg.size());                                    // 申请 strMsg.size() 大小的空间
+        pdu->uiMsgType = 8888;                                              // 给一个消息类型
+        memcpy(pdu->caMsg, strMsg.toStdString().c_str(), strMsg.size());    // 将信息复制进 pdu->caMsg
+        m_tcpSocket.write((char*)pdu, pdu->uiPDULen);                       // 发送数据
+        free(pdu);                                                          // 释放
+        pdu = NULL;
+    } else {
+        QMessageBox::warning(this, "信息发送", "发送的信息不能为空");
+    }
+}

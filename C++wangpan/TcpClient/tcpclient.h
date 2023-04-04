@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QFile>        // 文件操作
 #include <QTcpSocket>   // 连接服务器、收发服务器数据
+#include "protocol.h"
 
 namespace Ui {
 class TcpClient;
@@ -18,6 +19,9 @@ public:
 
 public slots:           // 槽函数
     void showConnect();
+
+private slots:
+    void on_send_pb_clicked();
 
 private:
     Ui::TcpClient *ui;

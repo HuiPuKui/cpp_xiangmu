@@ -26,10 +26,12 @@ CONFIG += c++11
 
 SOURCES += \
         main.cpp \
-        tcpclient.cpp
+        tcpclient.cpp \
+    protocol.cpp
 
 HEADERS += \
-        tcpclient.h
+        tcpclient.h \
+    protocol.h
 
 FORMS += \
         tcpclient.ui

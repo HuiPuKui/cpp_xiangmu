@@ -27,11 +27,15 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         tcpserver.cpp \
-    mytcpserver.cpp
+    mytcpserver.cpp \
+    mytcpsocket.cpp \
+    protocol.cpp
 
 HEADERS += \
         tcpserver.h \
-    mytcpserver.h
+    mytcpserver.h \
+    mytcpsocket.h \
+    protocol.h
 
 FORMS += \
         tcpserver.ui
