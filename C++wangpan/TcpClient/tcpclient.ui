@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>744</width>
+    <height>626</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,45 +15,11 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <widget class="QTextEdit" name="textEdit">
-       <property name="font">
-        <font>
-         <family>Agency FB</family>
-         <pointsize>20</pointsize>
-        </font>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <widget class="QLineEdit" name="lineEdit">
-         <property name="font">
-          <font>
-           <family>Agency FB</family>
-           <pointsize>24</pointsize>
-          </font>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="send_pb">
-         <property name="font">
-          <font>
-           <family>Agency FB</family>
-           <pointsize>22</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>发送</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-    </layout>
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>TextLabel</string>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

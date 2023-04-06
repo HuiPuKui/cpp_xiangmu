@@ -16,4 +16,5 @@ void MyTcpServer::incomingConnection(qintptr socketDescriptor) {
 
     pTcpSocket->setSocketDescriptor(socketDescriptor);  // 用这个来接收文件描述符
     m_tcpSocketList.append(pTcpSocket);                 // 放入列表中
+    qDebug() << "asd";
 }
