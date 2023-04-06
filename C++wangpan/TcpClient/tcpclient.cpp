@@ -25,18 +25,26 @@ TcpClient::~TcpClient() {
 void TcpClient::recvMsg() {
     qDebug() << m_tcpSocket.bytesAvailable();
     uint uiPDULen = 0;
-    m_tcpSocket.read((char*)&uiPDULen, sizeof(uint));                     // 首先读 sizeof(uint) 大小的字节，将 uiPDULen 读进来
-    uint uiMsgLen = uiPDULen - sizeof(PDU);                         // 那么实际消息长度就是总的协议数据单元大小减去 sizeof(PDU)
-    PDU *pdu = mkPDU(uiMsgLen);                                     // 因此在弹性结构体申请 uiMsgLen 大小的空间进行接收
-    m_tcpSocket.read((char*)pdu + sizeof(uint), uiPDULen - sizeof(uint)); // 接收要在上个接受的之后，所以加一个偏移量
-    qDebug() << pdu->caData << ' ' << pdu->uiMsgType;
-    qDebug() << ENUM_MSG_TYPE_MIN << ' ' << ENUM_MSG_TYPE_REGIST_REQUEST << ' ' << ENUM_MSG_TYPE_REGIST_RESPOND;
+    m_tcpSocket.read((char*)&uiPDULen, sizeof(uint));                        // 首先读 sizeof(uint) 大小的字节，将 uiPDULen 读进来
+    uint uiMsgLen = uiPDULen - sizeof(PDU);                                  // 那么实际消息长度就是总的协议数据单元大小减去 sizeof(PDU)
+    PDU *pdu = mkPDU(uiMsgLen);                                              // 因此在弹性结构体申请 uiMsgLen 大小的空间进行接收
+    m_tcpSocket.read((char*)pdu + sizeof(uint), uiPDULen - sizeof(uint));    // 接收要在上个接受的之后，所以加一个偏移量
+//    qDebug() << pdu->caData << ' ' << pdu->uiMsgType;
+//    qDebug() << ENUM_MSG_TYPE_MIN << ' ' << ENUM_MSG_TYPE_REGIST_REQUEST << ' ' << ENUM_MSG_TYPE_REGIST_RESPOND;
     switch (pdu->uiMsgType) {
-    case ENUM_MSG_TYPE_REGIST_RESPOND: {
-        if (0 == strcmp(pdu->caData, REGIST_OK)) {
+    case ENUM_MSG_TYPE_REGIST_RESPOND: {                                     // 接收到注册返回信息
+        if (0 == strcmp(pdu->caData, REGIST_OK)) {                           // 注册成功
             QMessageBox::information(this, "注册", REGIST_OK);
-        } else if (0 == strcmp(pdu->caData, REGIST_FAILED)) {
+        } else if (0 == strcmp(pdu->caData, REGIST_FAILED)) {                // 注册失败
             QMessageBox::warning(this, "注册", REGIST_FAILED);
+        }
+        break;
+    }
+    case ENUM_MSG_TYPE_LOGIN_RESPOND: {                                     // 接收到登录返回信息
+        if (0 == strcmp(pdu->caData, LOGIN_OK)) {                           // 登录成功
+            QMessageBox::information(this, "登录", LOGIN_OK);
+        } else if (0 == strcmp(pdu->caData, LOGIN_FAILED)) {                // 登录失败
+            QMessageBox::warning(this, "登录", LOGIN_FAILED);
         }
         break;
     }
@@ -47,7 +55,7 @@ void TcpClient::recvMsg() {
     pdu = NULL;
 }
 
-void TcpClient::loadConfig() { // 初始化
+void TcpClient::loadConfig() {                         // 初始化
     QFile file(":/client.config");                      // 打开文件
     if (file.open(QIODevice::ReadOnly)) {
         QByteArray baData = file.readAll();             // 全部读取出来
@@ -87,9 +95,20 @@ void TcpClient::on_send_pb_clicked() {
 }
 #endif
 
-void TcpClient::on_login_pb_clicked()
-{
-
+void TcpClient::on_login_pb_clicked() {                                // 点击登录
+    QString strName = ui->name_le->text();                              // 读用户名
+    QString strPwd = ui->pwd_le->text();                                // 读密码
+    if (!strName.isEmpty() && !strPwd.isEmpty()) {
+        PDU *pdu = mkPDU(0);
+        pdu->uiMsgType = ENUM_MSG_TYPE_LOGIN_REQUEST;                  // 消息类型：注册请求
+        strncpy(pdu->caData, strName.toStdString().c_str(), 32);        // 给前 32 位用户名
+        strncpy(pdu->caData + 32, strPwd.toStdString().c_str(), 32);    // 后 32 位 密码
+        m_tcpSocket.write((char*)pdu, pdu->uiPDULen);                   // 发送数据
+        free(pdu);                                                      // 释放内存
+        pdu = NULL;
+    } else {
+        QMessageBox::critical(this, "登录", "登录失败：用户名或者密码不能为空");
+    }
 }
 
 void TcpClient::on_regist_pb_clicked() {                              // 点击注册

@@ -12,8 +12,9 @@ public:
     static OpeDB& getInstance();
     void init();
     ~OpeDB();
-    bool handleRegist(const char* name, const char* pwd);
 
+    bool handleRegist(const char* name, const char* pwd);
+    bool handleLogin(const char* name, const char* pwd);
 signals:
 
 public slots:

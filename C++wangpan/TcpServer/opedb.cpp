@@ -39,3 +39,23 @@ bool OpeDB::handleRegist(const char *name, const char *pwd) {
     QSqlQuery query;
     return query.exec(data);
 }
+
+bool OpeDB::handleLogin(const char *name, const char *pwd) {
+    if (NULL == name || NULL == pwd) { // 检验形参的有效性
+        return false;
+    }
+    QString data = QString("select * from usrInfo where name = \'%1\' and pwd = \'%2\' and online = 0;").arg(name).arg(pwd); // sql 语句
+    qDebug() << data;
+    QSqlQuery query;
+    query.exec(data);
+    if (query.next()) { // 有下一条数据代表查询到一个人，因为用户名唯一
+        // 将状态改为在线
+        data = QString("update usrInfo set online = 1 where name = \'%1\' and pwd = \'%2\' and online = 0;").arg(name).arg(pwd); // sql 语句
+        qDebug() << data;
+        QSqlQuery query;
+        query.exec(data);
+        return true;
+    } else {
+        return false;
+    }
+}

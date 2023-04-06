@@ -33,7 +33,25 @@ void MyTcpSocket::recvMsg() {
         free(respdu);                                                   // 释放
         respdu = NULL;
         break;
-
+    }
+    case ENUM_MSG_TYPE_LOGIN_REQUEST: {
+        char caName[32] = {'\0'};
+        char caPwd[32] = {'\0'};
+        strncpy(caName, pdu->caData, 32);                               // 提取用户名
+        strncpy(caPwd, pdu->caData + 32, 32);                           // 提取密码
+        bool ret = OpeDB::getInstance().handleLogin(caName, caPwd);     // 把用户名、密码传给数据库，获得返回值
+        PDU *respdu = mkPDU(0);
+        respdu->uiMsgType = ENUM_MSG_TYPE_LOGIN_RESPOND;
+        if (ret == true) {
+            strcpy(respdu->caData, LOGIN_OK);                          // 成功就传成功
+        } else {
+            strcpy(respdu->caData, LOGIN_FAILED);                      // 失败就传失败
+        }
+        qDebug() << respdu->caData;
+        write((char*)respdu, pdu->uiPDULen);
+        free(respdu);                                                   // 释放
+        respdu = NULL;
+        break;
     }
     default:
         break;
