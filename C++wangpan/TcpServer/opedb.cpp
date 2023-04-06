@@ -30,3 +30,12 @@ void OpeDB::init() {
 OpeDB::~OpeDB() { // 析构函数关闭数据库
     m_db.close();
 }
+
+bool OpeDB::handleRegist(const char *name, const char *pwd) {
+    if (NULL == name || NULL == pwd) { // 检验形参的有效性
+        return false;
+    }
+    QString data = QString("insert into usrInfo(name, pwd) values(\'%1\', \'%2\')").arg(name).arg(pwd); // sql 语句
+    QSqlQuery query;
+    return query.exec(data);
+}

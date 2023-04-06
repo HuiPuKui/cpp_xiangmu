@@ -7,6 +7,9 @@
 
 typedef unsigned int uint;
 
+#define REGIST_OK "regist ok"
+#define REGIST_FAILED "regist failed : name existed"
+
 enum ENUM_MSG_TYPE {
     ENUM_MSG_TYPE_MIN = 0,
     ENUM_MSG_TYPE_REGIST_REQUEST,   // 注册请求

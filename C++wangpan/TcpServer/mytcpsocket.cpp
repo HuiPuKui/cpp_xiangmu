@@ -13,5 +13,34 @@ void MyTcpSocket::recvMsg() {
     uint uiMsgLen = uiPDULen - sizeof(PDU);                         // 那么实际消息长度就是总的协议数据单元大小减去 sizeof(PDU)
     PDU *pdu = mkPDU(uiMsgLen);                                     // 因此在弹性结构体申请 uiMsgLen 大小的空间进行接收
     this->read((char*)pdu + sizeof(uint), uiPDULen - sizeof(uint)); // 接收要在上个接受的之后，所以加一个偏移量
-    qDebug() << pdu->uiMsgType << ' ' << (char*)(pdu->caMsg);
+    switch (pdu->uiMsgType) {
+    case ENUM_MSG_TYPE_REGIST_REQUEST: {
+        char caName[32] = {'\0'};
+        char caPwd[32] = {'\0'};
+        strncpy(caName, pdu->caData, 32);                               // 提取用户名
+        strncpy(caPwd, pdu->caData + 32, 32);                           // 提取密码
+        qDebug() << caName << ' ' << caPwd << ' ' << pdu->uiMsgType;
+        bool ret = OpeDB::getInstance().handleRegist(caName, caPwd);    // 把用户名、密码传给数据库，获得返回值
+        PDU *respdu = mkPDU(0);
+        respdu->uiMsgType = ENUM_MSG_TYPE_REGIST_RESPOND;
+        if (ret == true) {
+            strcpy(respdu->caData, REGIST_OK);                          // 成功就传成功
+        } else {
+            strcpy(respdu->caData, REGIST_FAILED);                      // 失败就传失败
+        }
+        qDebug() << respdu->caData;
+        write((char*)respdu, pdu->uiPDULen);
+        free(respdu);                                                   // 释放
+        respdu = NULL;
+        break;
+
+    }
+    default:
+        break;
+    }
+    free(pdu);
+    pdu = NULL;
+
+//    qDebug() << caName << ' ' << caPwd << ' ' << pdu->uiMsgType;
+
 }

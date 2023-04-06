@@ -2,6 +2,7 @@
 #define MYTCPSOCKET_H
 
 #include <QTcpSocket>
+#include "opedb.h"
 
 class MyTcpSocket : public QTcpSocket {
     Q_OBJECT

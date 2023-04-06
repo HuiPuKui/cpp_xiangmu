@@ -2,6 +2,7 @@
 #define TCPSERVER_H
 
 #include <QWidget>
+#include "mytcpserver.h"
 
 namespace Ui {
 class TcpServer;

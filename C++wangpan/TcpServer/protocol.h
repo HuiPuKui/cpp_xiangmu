@@ -7,6 +7,24 @@
 
 typedef unsigned int uint;
 
+#define REGIST_OK "regist ok"
+#define REGIST_FAILED "regist failed : name existed"
+
+enum ENUM_MSG_TYPE {
+    ENUM_MSG_TYPE_MIN = 0,
+    ENUM_MSG_TYPE_REGIST_REQUEST,   // 注册请求
+    ENUM_MSG_TYPE_REGIST_RESPOND,   // 注册回复
+//    ENUM_MSG_TYPE_REQUEST,
+//    ENUM_MSG_TYPE_RESPOND,
+//    ENUM_MSG_TYPE_REQUEST,
+//    ENUM_MSG_TYPE_RESPOND,
+//    ENUM_MSG_TYPE_REQUEST,
+//    ENUM_MSG_TYPE_RESPOND,
+//    ENUM_MSG_TYPE_REQUEST,
+//    ENUM_MSG_TYPE_RESPOND,
+    ENUM_MSG_TYPE_MAX = 0x00ffffff
+};
+
 struct PDU {            // 协议数据单元
     uint uiPDULen;      // 总的协议数据单元大小
     uint uiMsgType;     // 消息类型
