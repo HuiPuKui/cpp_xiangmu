@@ -1,0 +1,13 @@
+release/main.o
+release/tcpclient.o
+release/protocol.o
+release/opewidget.o
+release/online.o
+release/friend.o
+release/book.o
+release/qrc_config.o
+release/moc_tcpclient.o
+release/moc_opewidget.o
+release/moc_online.o
+release/moc_friend.o
+release/moc_book.o

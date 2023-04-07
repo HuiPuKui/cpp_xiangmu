@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QHostAddress>
+#include "opewidget.h"
 
 TcpClient::TcpClient(QWidget *parent) : QWidget(parent), ui(new Ui::TcpClient) {
     ui->setupUi(this);
@@ -43,6 +44,8 @@ void TcpClient::recvMsg() {
     case ENUM_MSG_TYPE_LOGIN_RESPOND: {                                     // 接收到登录返回信息
         if (0 == strcmp(pdu->caData, LOGIN_OK)) {                           // 登录成功
             QMessageBox::information(this, "登录", LOGIN_OK);
+            OpeWidget::getInstance().show();                                // 显示跳转的窗口
+            this->hide();                                                   // 隐藏登录界面
         } else if (0 == strcmp(pdu->caData, LOGIN_FAILED)) {                // 登录失败
             QMessageBox::warning(this, "登录", LOGIN_FAILED);
         }

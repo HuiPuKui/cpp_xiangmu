@@ -4,6 +4,11 @@
 
 MyTcpSocket::MyTcpSocket() {                                  // 当 socket 有数据过来了就会发出 readyRead 信号
     connect(this, SIGNAL(readyRead()), this, SLOT(recvMsg())); // 用自己的 recvMsg 进行接收
+    connect(this, SIGNAL(disconnected()), this, SLOT(clientOffline()));
+}
+
+QString MyTcpSocket::getName() {
+    return m_strName;
 }
 
 void MyTcpSocket::recvMsg() {
@@ -44,6 +49,7 @@ void MyTcpSocket::recvMsg() {
         respdu->uiMsgType = ENUM_MSG_TYPE_LOGIN_RESPOND;
         if (ret == true) {
             strcpy(respdu->caData, LOGIN_OK);                          // 成功就传成功
+            m_strName = caName;
         } else {
             strcpy(respdu->caData, LOGIN_FAILED);                      // 失败就传失败
         }
@@ -61,4 +67,9 @@ void MyTcpSocket::recvMsg() {
 
 //    qDebug() << caName << ' ' << caPwd << ' ' << pdu->uiMsgType;
 
+}
+
+void MyTcpSocket::clientOffline() {
+    OpeDB::getInstance().handleOffline(m_strName.toStdString().c_str());
+    emit offline(this);
 }
