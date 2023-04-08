@@ -5,6 +5,7 @@
 #include <QFile>        // 文件操作
 #include <QTcpSocket>   // 连接服务器、收发服务器数据
 #include "protocol.h"
+#include "opewidget.h"
 
 namespace Ui {
 class TcpClient;
@@ -17,6 +18,8 @@ public:
     ~TcpClient();
     void loadConfig(); // 初始化，加载配置
 
+    static TcpClient &getInstance();
+    QTcpSocket &getTcpSocket();
 public slots:           // 槽函数
     void showConnect();
     void recvMsg();

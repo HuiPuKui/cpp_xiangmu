@@ -1,4 +1,6 @@
 #include "friend.h"
+#include "protocol.h"
+#include "tcpclient.h"
 
 /*
  *
@@ -42,15 +44,27 @@ Friend::Friend(QWidget *parent) : QWidget(parent) {       // 窗口设计
     pMain->addWidget(m_pOnline);
     m_pOnline->hide();                                      // 先隐藏不显示
 
-
     setLayout(pMain);
 
     connect(m_pShowOnlineUsrPB, SIGNAL(clicked(bool)), this, SLOT(showOnline()));
 }
 
+void Friend::showAllOnlineUsr(PDU *pdu) {
+    if (NULL == pdu) {
+        return ;
+    }
+    m_pOnline->showUsr(pdu); // 把 pdu 传给显示函数
+}
+
 void Friend::showOnline() {
     if (m_pOnline->isHidden()) { // 如果隐藏就显示
         m_pOnline->show();
+
+        PDU *pdu = mkPDU(0);
+        pdu->uiMsgType = ENUM_MSG_TYPE_ALL_ONLINE_REQUEST; // 封装请求信息
+        TcpClient::getInstance().getTcpSocket().write((char*)pdu, pdu->uiPDULen); // 请求信息发送
+        free(pdu); // 释放
+        pdu = NULL;
     } else {                     // 如果显示就隐藏
         m_pOnline->hide();
     }

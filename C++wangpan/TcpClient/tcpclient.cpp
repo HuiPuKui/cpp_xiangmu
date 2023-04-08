@@ -24,7 +24,7 @@ TcpClient::~TcpClient() {
 }
 
 void TcpClient::recvMsg() {
-    qDebug() << m_tcpSocket.bytesAvailable();
+//    qDebug() << m_tcpSocket.bytesAvailable();
     uint uiPDULen = 0;
     m_tcpSocket.read((char*)&uiPDULen, sizeof(uint));                        // 首先读 sizeof(uint) 大小的字节，将 uiPDULen 读进来
     uint uiMsgLen = uiPDULen - sizeof(PDU);                                  // 那么实际消息长度就是总的协议数据单元大小减去 sizeof(PDU)
@@ -51,6 +51,11 @@ void TcpClient::recvMsg() {
         }
         break;
     }
+    case ENUM_MSG_TYPE_ALL_ONLINE_RESPOND: {
+        OpeWidget::getInstance().getFriend()->showAllOnlineUsr(pdu);        // 把得到的 pdu 一层一层传下去
+
+        break;
+    }
     default:
         break;
     }
@@ -74,6 +79,15 @@ void TcpClient::loadConfig() {                         // 初始化
     } else {
         QMessageBox::critical(this, "open config", "open config failed"); // 打不开文件
     }
+}
+
+TcpClient &TcpClient::getInstance() {
+    static TcpClient instance;
+    return instance;
+}
+
+QTcpSocket &TcpClient::getTcpSocket() {
+    return m_tcpSocket;
 }
 
 void TcpClient::showConnect() { // 信号处理函数

@@ -40,7 +40,7 @@ bool OpeDB::handleRegist(const char *name, const char *pwd) {
     return query.exec(data);
 }
 
-bool OpeDB::handleLogin(const char *name, const char *pwd) {
+bool OpeDB::handleLogin(const char *name, const char *pwd) { // 处理上线
     if (NULL == name || NULL == pwd) { // 检验形参的有效性
         return false;
     }
@@ -60,7 +60,7 @@ bool OpeDB::handleLogin(const char *name, const char *pwd) {
     }
 }
 
-void OpeDB::handleOffline(const char *name) {
+void OpeDB::handleOffline(const char *name) { // 处理下线
     if (NULL == name) {
         qDebug() << "name is NULL";
         return;
@@ -69,4 +69,19 @@ void OpeDB::handleOffline(const char *name) {
 
     QSqlQuery query;
     query.exec(data);
+}
+
+QStringList OpeDB::handleAllOnline() { // 查询在线人数
+    QString data = QString("select name from usrInfo where online = 1;");
+
+    QSqlQuery query;
+    query.exec(data);
+
+    QStringList result; // 存放结果集
+    result.clear();
+
+    while (query.next()) { // 逐条读取用户名
+        result.append(query.value(0).toString());
+    }
+    return result;
 }

@@ -34,7 +34,7 @@ void MyTcpSocket::recvMsg() {
             strcpy(respdu->caData, REGIST_FAILED);                      // 失败就传失败
         }
         qDebug() << respdu->caData;
-        write((char*)respdu, pdu->uiPDULen);
+        write((char*)respdu, respdu->uiPDULen);
         free(respdu);                                                   // 释放
         respdu = NULL;
         break;
@@ -54,7 +54,23 @@ void MyTcpSocket::recvMsg() {
             strcpy(respdu->caData, LOGIN_FAILED);                      // 失败就传失败
         }
         qDebug() << respdu->caData;
-        write((char*)respdu, pdu->uiPDULen);
+        write((char*)respdu, respdu->uiPDULen);
+        free(respdu);                                                   // 释放
+        respdu = NULL;
+        break;
+    }
+    case ENUM_MSG_TYPE_ALL_ONLINE_REQUEST: {
+        QStringList ret = OpeDB::getInstance().handleAllOnline();       // 获得用户名列表
+        uint uiMsgLen = ret.size() * 32;                                // 用个数推算占用的空间
+        PDU *respdu = mkPDU(uiMsgLen);                                  // 申请内存
+        respdu->uiMsgType = ENUM_MSG_TYPE_ALL_ONLINE_RESPOND;
+        for (int i = 0; i < ret.size(); i ++) {                         // 一次将用户名拷贝进 caMsg
+            memcpy((char*)(respdu->caMsg) + i * 32
+                   , ret.at(i).toStdString().c_str()
+                   , ret.at(i).size());
+        }
+
+        write((char*)respdu, respdu->uiPDULen);                            // 发送数据
         free(respdu);                                                   // 释放
         respdu = NULL;
         break;
