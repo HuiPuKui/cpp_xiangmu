@@ -1,6 +1,7 @@
 #include "mytcpsocket.h"
 #include "protocol.h"
 #include <QDebug>
+#include "mytcpserver.h"
 
 MyTcpSocket::MyTcpSocket() {                                  // 当 socket 有数据过来了就会发出 readyRead 信号
     connect(this, SIGNAL(readyRead()), this, SLOT(recvMsg())); // 用自己的 recvMsg 进行接收
@@ -73,6 +74,51 @@ void MyTcpSocket::recvMsg() {
         write((char*)respdu, respdu->uiPDULen);                            // 发送数据
         free(respdu);                                                   // 释放
         respdu = NULL;
+        break;
+    }
+    case ENUM_MSG_TYPE_SEARCH_USR_REQUEST: {
+        int ret = OpeDB::getInstance().handleSearchUsr(pdu->caData);
+        PDU *respdu = mkPDU(0);
+        respdu->uiMsgType = ENUM_MSG_TYPE_SEARCH_USR_RESPOND;
+        if (-1 == ret) {
+            strcpy(respdu->caData, SEARCH_USR_NO);
+        } else if (1 == ret) {
+            strcpy(respdu->caData, SEARCH_USR_ONLINE);
+        } else if (0 == ret) {
+            strcpy(respdu->caData, SEARCH_USR_OFFLINE);
+        }
+        write((char*)respdu, respdu->uiPDULen);                            // 发送数据
+        free(respdu);                                                   // 释放
+        respdu = NULL;
+        break;
+    }
+    case ENUM_MSG_TYPE_ADD_FRIEND_REQUEST : {
+        char caPerName[32] = {'\0'};
+        char caName[32] = {'\0'};
+        strncpy(caPerName, pdu->caData, 32);
+        strncpy(caName, pdu->caData + 32, 32);
+        int ret = OpeDB::getInstance().handleAddFriend(caPerName, caName);
+        PDU *respdu = NULL;
+        if (-1 == ret) {
+            respdu = mkPDU(0);
+            respdu->uiMsgLen = ENUM_MSG_TYPE_ADD_FRIEND_RESPOND;
+            strcpy(respdu->caData, UNKNOW_ERROR);
+        } else if (0 == ret) {
+            respdu = mkPDU(0);
+            respdu->uiMsgLen = ENUM_MSG_TYPE_ADD_FRIEND_RESPOND;
+            strcpy(respdu->caData, EXISTED_FIREND);
+        } else if (1 == ret) {
+            MyTcpServer::getInstance().resend(caPerName, pdu);
+
+        } else if (2 == ret) {
+            respdu = mkPDU(0);
+            respdu->uiMsgLen = ENUM_MSG_TYPE_ADD_FRIEND_RESPOND;
+            strcpy(respdu->caData, ADD_FRIEND_OFFLINE);
+        } else if (3 == ret) {
+            respdu = mkPDU(0);
+            respdu->uiMsgLen = ENUM_MSG_TYPE_ADD_FRIEND_RESPOND;
+            strcpy(respdu->caData, ADD_FRIEND_NOEXIST);
+        }
         break;
     }
     default:

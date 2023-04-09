@@ -53,6 +53,23 @@ void TcpClient::recvMsg() {
     }
     case ENUM_MSG_TYPE_ALL_ONLINE_RESPOND: {
         OpeWidget::getInstance().getFriend()->showAllOnlineUsr(pdu);        // 把得到的 pdu 一层一层传下去
+        break;
+    }
+    case ENUM_MSG_TYPE_SEARCH_USR_RESPOND : {
+        if (0 == strcmp(SEARCH_USR_NO, pdu->caData)) {
+            QMessageBox::information(this, "搜索", QString("%1: not exist").arg(OpeWidget::getInstance().getFriend()->m_strSearchName));
+        } else if (0 == strcmp(SEARCH_USR_ONLINE, pdu->caData)) {
+            QMessageBox::information(this, "搜索", QString("%1: online").arg(OpeWidget::getInstance().getFriend()->m_strSearchName));
+        } else if (0 == strcmp(SEARCH_USR_OFFLINE, pdu->caData)) {
+            QMessageBox::information(this, "搜索", QString("%1: offline").arg(OpeWidget::getInstance().getFriend()->m_strSearchName));
+        }
+        break;
+    }
+    case ENUM_MSG_TYPE_ADD_FRIEND_REQUEST : {
+
+        break;
+    }
+    case ENUM_MSG_TYPE_ADD_FRIEND_RESPOND: {
 
         break;
     }
@@ -90,6 +107,10 @@ QTcpSocket &TcpClient::getTcpSocket() {
     return m_tcpSocket;
 }
 
+QString TcpClient::loginName() {
+    return m_strLoginName;
+}
+
 void TcpClient::showConnect() { // 信号处理函数
     QMessageBox::information(this, "连接服务器", "连接服务器成功");
 }
@@ -116,6 +137,7 @@ void TcpClient::on_login_pb_clicked() {                                // 点击
     QString strName = ui->name_le->text();                              // 读用户名
     QString strPwd = ui->pwd_le->text();                                // 读密码
     if (!strName.isEmpty() && !strPwd.isEmpty()) {
+        m_strLoginName = strName;
         PDU *pdu = mkPDU(0);
         pdu->uiMsgType = ENUM_MSG_TYPE_LOGIN_REQUEST;                  // 消息类型：注册请求
         strncpy(pdu->caData, strName.toStdString().c_str(), 32);        // 给前 32 位用户名

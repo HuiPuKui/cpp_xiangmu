@@ -41,12 +41,6 @@ public:
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
         online_lw = new QListWidget(Online);
-        new QListWidgetItem(online_lw);
-        new QListWidgetItem(online_lw);
-        new QListWidgetItem(online_lw);
-        new QListWidgetItem(online_lw);
-        new QListWidgetItem(online_lw);
-        new QListWidgetItem(online_lw);
         online_lw->setObjectName(QString::fromUtf8("online_lw"));
         QFont font;
         font.setFamily(QString::fromUtf8("Arial"));
@@ -89,23 +83,6 @@ public:
     void retranslateUi(QWidget *Online)
     {
         Online->setWindowTitle(QApplication::translate("Online", "Form", nullptr));
-
-        const bool __sortingEnabled = online_lw->isSortingEnabled();
-        online_lw->setSortingEnabled(false);
-        QListWidgetItem *___qlistwidgetitem = online_lw->item(0);
-        ___qlistwidgetitem->setText(QApplication::translate("Online", "11111", nullptr));
-        QListWidgetItem *___qlistwidgetitem1 = online_lw->item(1);
-        ___qlistwidgetitem1->setText(QApplication::translate("Online", "22222", nullptr));
-        QListWidgetItem *___qlistwidgetitem2 = online_lw->item(2);
-        ___qlistwidgetitem2->setText(QApplication::translate("Online", "33333", nullptr));
-        QListWidgetItem *___qlistwidgetitem3 = online_lw->item(3);
-        ___qlistwidgetitem3->setText(QApplication::translate("Online", "44444", nullptr));
-        QListWidgetItem *___qlistwidgetitem4 = online_lw->item(4);
-        ___qlistwidgetitem4->setText(QApplication::translate("Online", "55555", nullptr));
-        QListWidgetItem *___qlistwidgetitem5 = online_lw->item(5);
-        ___qlistwidgetitem5->setText(QApplication::translate("Online", "66666", nullptr));
-        online_lw->setSortingEnabled(__sortingEnabled);
-
         addFriend_pb->setText(QApplication::translate("Online", "\345\212\240\345\245\275\345\217\213", nullptr));
     } // retranslateUi
 

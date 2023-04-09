@@ -85,3 +85,60 @@ QStringList OpeDB::handleAllOnline() { // 查询在线人数
     }
     return result;
 }
+
+/*
+ *
+ * 返回值 含义
+ *  -1   不存在
+ *   0   不在线
+ *   1    在线
+ *
+ */
+
+int OpeDB::handleSearchUsr(const char *name) { // 查询名为 name 的用户
+    if (NULL == name) {
+        return -1;
+    }
+    QString data = QString("select online from usrInfo where name = \'%1\';").arg(name);
+    QSqlQuery query;
+    query.exec(data);
+    if (query.next()) {
+        int ret = query.value(0).toInt();
+        if (ret == 1) {
+            return 1;
+        } else {
+            return 0;
+        }
+    } else {
+        return -1;
+    }
+}
+
+int OpeDB::handleAddFriend(const char *pername, const char *name) {
+    if (NULL == pername || NULL == name) {
+        return -1;
+    }
+    QString data = QString("select * from friend where (id = (select id from usrInfo where name = \'%1\') and friendId = (select id from usrInfo where name = \'%2\')) "
+                           "or (friendId = (select id from usrInfo where name = \'%3\') and id = (select id from usrInfo where name = \'%4\'));").arg(pername).arg(name).arg(name),arg(pername);
+    qDebug() << data;
+    QSqlQuery query;
+    query.exec(data);
+
+    if (query.next()) { // 双方已是好友
+        return 0;
+    } else {            // 不是好友
+        data = QString("select online from usrInfo where name = \'%1\';").arg(pername);
+        QSqlQuery query;
+        query.exec(data);
+        if (query.next()) {
+            int ret = query.value(0).toInt();
+            if (ret == 1) {
+                return 1; // 在线
+            } else {
+                return 2; // 不在线
+            }
+        } else {
+            return 3;     // 用户名不存在
+        }
+    }
+}

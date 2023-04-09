@@ -13,6 +13,10 @@ typedef unsigned int uint;
 #define LOGIN_OK "login ok"
 #define LOGIN_FAILED "login failed : name error or pwd error or relogin"
 
+#define SEARCH_USR_NO "No such people"
+#define SEARCH_USR_ONLINE "online"
+#define SEARCH_USR_OFFLINE "offline"
+
 enum ENUM_MSG_TYPE {
     ENUM_MSG_TYPE_MIN = 0,
     ENUM_MSG_TYPE_REGIST_REQUEST,       // 注册请求
@@ -26,8 +30,10 @@ enum ENUM_MSG_TYPE {
 
     ENUM_MSG_TYPE_SEARCH_USR_REQUEST,   // 搜索用户请求
     ENUM_MSG_TYPE_SEARCH_USR_RESPOND,   // 搜索用户回复
-//    ENUM_MSG_TYPE_REQUEST,
-//    ENUM_MSG_TYPE_RESPOND,
+
+    ENUM_MSG_TYPE_ADD_FRIEND_REQUEST,   // 添加好友请求
+    ENUM_MSG_TYPE_ADD_FRIEND_RESPOND,   // 添加好友回复
+
 //    ENUM_MSG_TYPE_REQUEST,
 //    ENUM_MSG_TYPE_RESPOND,
 //    ENUM_MSG_TYPE_REQUEST,
