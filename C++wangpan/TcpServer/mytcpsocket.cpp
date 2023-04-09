@@ -76,7 +76,7 @@ void MyTcpSocket::recvMsg() {
         respdu = NULL;
         break;
     }
-    case ENUM_MSG_TYPE_SEARCH_USR_REQUEST: {
+    case ENUM_MSG_TYPE_SEARCH_USR_REQUEST: { // 看搜索的用户是否存在、在线、离线
         int ret = OpeDB::getInstance().handleSearchUsr(pdu->caData);
         PDU *respdu = mkPDU(0);
         respdu->uiMsgType = ENUM_MSG_TYPE_SEARCH_USR_RESPOND;
@@ -92,29 +92,28 @@ void MyTcpSocket::recvMsg() {
         respdu = NULL;
         break;
     }
-    case ENUM_MSG_TYPE_ADD_FRIEND_REQUEST : {
+    case ENUM_MSG_TYPE_ADD_FRIEND_REQUEST : { // 加好友的请求
         char caPerName[32] = {'\0'};
         char caName[32] = {'\0'};
         strncpy(caPerName, pdu->caData, 32);
         strncpy(caName, pdu->caData + 32, 32);
         int ret = OpeDB::getInstance().handleAddFriend(caPerName, caName);
         PDU *respdu = NULL;
-        if (-1 == ret) {
+        if (-1 == ret) {                // 错误
             respdu = mkPDU(0);
             respdu->uiMsgLen = ENUM_MSG_TYPE_ADD_FRIEND_RESPOND;
             strcpy(respdu->caData, UNKNOW_ERROR);
-        } else if (0 == ret) {
+        } else if (0 == ret) {          // 已经是好友了
             respdu = mkPDU(0);
             respdu->uiMsgLen = ENUM_MSG_TYPE_ADD_FRIEND_RESPOND;
             strcpy(respdu->caData, EXISTED_FIREND);
-        } else if (1 == ret) {
+        } else if (1 == ret) {          // 存在
             MyTcpServer::getInstance().resend(caPerName, pdu);
-
-        } else if (2 == ret) {
+        } else if (2 == ret) {          // 不在线
             respdu = mkPDU(0);
             respdu->uiMsgLen = ENUM_MSG_TYPE_ADD_FRIEND_RESPOND;
             strcpy(respdu->caData, ADD_FRIEND_OFFLINE);
-        } else if (3 == ret) {
+        } else if (3 == ret) {          // 不存在
             respdu = mkPDU(0);
             respdu->uiMsgLen = ENUM_MSG_TYPE_ADD_FRIEND_RESPOND;
             strcpy(respdu->caData, ADD_FRIEND_NOEXIST);

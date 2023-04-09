@@ -73,7 +73,7 @@ void Friend::showOnline() {
     }
 }
 
-void Friend::searchUsr() {
+void Friend::searchUsr() { // 搜索用户
     m_strSearchName = QInputDialog::getText(this, "搜索", "用户名：");
     if (!m_strSearchName.isEmpty()) {
         qDebug() << m_strSearchName;
