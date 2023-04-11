@@ -98,6 +98,10 @@ void TcpClient::recvMsg() {
         QMessageBox::information(this, "添加好友", QString("添加%2好友失败").arg(caPerName));
         break;
     }
+    case ENUM_MSG_TYPE_FLUSH_FRIEND_RESPOND : {
+        OpeWidget::getInstance().getFriend()->updateFriendList(pdu);
+        break;
+    }
     default:
         break;
     }

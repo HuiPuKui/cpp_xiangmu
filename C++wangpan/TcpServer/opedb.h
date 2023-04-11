@@ -14,13 +14,14 @@ public:
     void init();
     ~OpeDB();
 
-    bool handleRegist(const char* name, const char* pwd);
-    bool handleLogin(const char* name, const char* pwd);
-    void handleOffline(const char* name);
-    QStringList handleAllOnline();
-    int handleSearchUsr(const char *name);
-    int handleAddFriend(const char* pername, const char* name);
-    void handleAgreeAddFriend(const char *pername, const char *name);
+    bool handleRegist(const char* name, const char* pwd);               // 注册
+    bool handleLogin(const char* name, const char* pwd);                // 登录
+    void handleOffline(const char* name);                               // 下线
+    QStringList handleAllOnline();                                      // 在线用户
+    int handleSearchUsr(const char *name);                              // 查找用户
+    int handleAddFriend(const char* pername, const char* name);         // 添加好友
+    void handleAgreeAddFriend(const char *pername, const char *name);   // 同意添加好友
+    QStringList handleFlushFriend(const char *name);                    // 刷新
 signals:
 
 public slots:

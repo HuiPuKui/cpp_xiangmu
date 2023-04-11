@@ -15,6 +15,7 @@ class Friend : public QWidget {
 public:
     explicit Friend(QWidget *parent = nullptr);
     void showAllOnlineUsr(PDU *pdu);
+    void updateFriendList(PDU *pdu);
 
     QString m_strSearchName;
 
@@ -23,6 +24,7 @@ signals:
 public slots:
     void showOnline();
     void searchUsr();
+    void flushFriend();
 private:
     QTextEdit *m_pShowMsgTE;            // 显示信息
     QListWidget *m_pFriendListWidget;   // 显示好友列表

@@ -149,6 +149,21 @@ void MyTcpSocket::recvMsg() {
         MyTcpServer::getInstance().resend(caName, pdu); // 向发起添加好友的那个人发送数据
         break;
     }
+    case ENUM_MSG_TYPE_FLUSH_FRIEND_REQUEST : {
+        char caName[32] = {'\0'};
+        memcpy(caName, pdu->caData, 32);
+        QStringList ret = OpeDB::getInstance().handleFlushFriend(caName);
+        uint uiMsgLen = ret.size() * 32; // 列表中的名字一共所需要占用的空间
+        PDU *respdu = mkPDU(uiMsgLen);
+        respdu->uiMsgType = ENUM_MSG_TYPE_FLUSH_FRIEND_RESPOND;
+        for (int i = 0; i < ret.size(); i ++) {
+            memcpy((char*)(respdu->caMsg) + i * 32, ret.at(i).toStdString().c_str(), ret.at(i).size());
+        }
+        write((char*)respdu, respdu->uiPDULen);
+        free(respdu);
+        respdu = NULL;
+        break;
+    }
     default:
         break;
     }
