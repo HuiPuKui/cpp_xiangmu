@@ -101,23 +101,52 @@ void MyTcpSocket::recvMsg() {
         PDU *respdu = NULL;
         if (-1 == ret) {                // 错误
             respdu = mkPDU(0);
-            respdu->uiMsgLen = ENUM_MSG_TYPE_ADD_FRIEND_RESPOND;
+            respdu->uiMsgType = ENUM_MSG_TYPE_ADD_FRIEND_RESPOND;
             strcpy(respdu->caData, UNKNOW_ERROR);
+            write((char*)respdu, respdu->uiPDULen);                            // 发送数据
+            free(respdu);                                                      // 释放
+            respdu = NULL;
         } else if (0 == ret) {          // 已经是好友了
             respdu = mkPDU(0);
-            respdu->uiMsgLen = ENUM_MSG_TYPE_ADD_FRIEND_RESPOND;
+            respdu->uiMsgType = ENUM_MSG_TYPE_ADD_FRIEND_RESPOND;
             strcpy(respdu->caData, EXISTED_FIREND);
+            write((char*)respdu, respdu->uiPDULen);                            // 发送数据
+            free(respdu);                                                      // 释放
+            respdu = NULL;
         } else if (1 == ret) {          // 存在
             MyTcpServer::getInstance().resend(caPerName, pdu);
         } else if (2 == ret) {          // 不在线
             respdu = mkPDU(0);
-            respdu->uiMsgLen = ENUM_MSG_TYPE_ADD_FRIEND_RESPOND;
+            respdu->uiMsgType = ENUM_MSG_TYPE_ADD_FRIEND_RESPOND;
             strcpy(respdu->caData, ADD_FRIEND_OFFLINE);
+            write((char*)respdu, respdu->uiPDULen);                            // 发送数据
+            free(respdu);                                                      // 释放
+            respdu = NULL;
         } else if (3 == ret) {          // 不存在
             respdu = mkPDU(0);
-            respdu->uiMsgLen = ENUM_MSG_TYPE_ADD_FRIEND_RESPOND;
+            respdu->uiMsgType = ENUM_MSG_TYPE_ADD_FRIEND_RESPOND;
             strcpy(respdu->caData, ADD_FRIEND_NOEXIST);
+            qDebug() << respdu->caData;
+            write((char*)respdu, respdu->uiPDULen);                            // 发送数据
+            free(respdu);                                                      // 释放
+            respdu = NULL;
         }
+
+        break;
+    }
+    case ENUM_MSG_TYPE_ADD_FRIEND_AGGREE : {
+        char caPerName[32] = {'\0'};
+        char caName[32] = {'\0'};
+        memcpy(caPerName, pdu->caData, 32);
+        memcpy(caName, pdu->caData + 32, 32);
+        OpeDB::getInstance().handleAgreeAddFriend(caPerName, caName);
+        MyTcpServer::getInstance().resend(caName, pdu); // 向发起添加好友的那个人发送数据
+        break;
+    }
+    case ENUM_MSG_TYPE_ADD_FRIEND_REFUSE : {
+        char caName[32] = {'\0'};
+        memcpy(caName, pdu->caData + 32, 32);
+        MyTcpServer::getInstance().resend(caName, pdu); // 向发起添加好友的那个人发送数据
         break;
     }
     default:

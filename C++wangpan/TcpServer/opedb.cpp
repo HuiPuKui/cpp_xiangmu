@@ -119,7 +119,7 @@ int OpeDB::handleAddFriend(const char *pername, const char *name) {
         return -1;
     }
     QString data = QString("select * from friend where (id = (select id from usrInfo where name = \'%1\') and friendId = (select id from usrInfo where name = \'%2\')) "
-                           "or (friendId = (select id from usrInfo where name = \'%3\') and id = (select id from usrInfo where name = \'%4\'));").arg(pername).arg(name).arg(name),arg(pername);
+                           "or (friendId = (select id from usrInfo where name = \'%3\') and id = (select id from usrInfo where name = \'%4\'));").arg(pername).arg(name).arg(name).arg(pername);
     qDebug() << data;
     QSqlQuery query;
     query.exec(data);
@@ -132,13 +132,24 @@ int OpeDB::handleAddFriend(const char *pername, const char *name) {
         query.exec(data);
         if (query.next()) {
             int ret = query.value(0).toInt();
+            qDebug() << ret;
             if (ret == 1) {
                 return 1; // 在线
             } else {
                 return 2; // 不在线
             }
         } else {
+            qDebug() << 3;
             return 3;     // 用户名不存在
         }
     }
+}
+
+void OpeDB::handleAgreeAddFriend(const char *pername, const char *name) {
+    if (NULL == pername || NULL == name) {
+        return ;
+    }
+    QString data = QString("insert into friend(id, friendId) values((select id from usrInfo where name = \'%1\'),(select id from usrInfo where name = \'%2\'));").arg(pername).arg(name);
+    QSqlQuery query;
+    query.exec(data);
 }

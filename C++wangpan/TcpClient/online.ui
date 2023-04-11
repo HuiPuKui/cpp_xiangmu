@@ -24,6 +24,31 @@
          <pointsize>16</pointsize>
         </font>
        </property>
+       <item>
+        <property name="text">
+         <string>aaaaa</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>sssss</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>ddddd</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>fffff</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>ggggg</string>
+        </property>
+       </item>
       </widget>
      </item>
      <item>
