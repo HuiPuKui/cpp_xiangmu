@@ -3,6 +3,8 @@
 #include "tcpclient.h"
 #include <QInputDialog> // 专门用来输入数据
 #include <QDebug>
+#include "privatechat.h"
+#include <QMessageBox>
 
 /*
  *
@@ -52,6 +54,7 @@ Friend::Friend(QWidget *parent) : QWidget(parent) {       // 窗口设计
     connect(m_pSearchUsrPB, SIGNAL(clicked(bool)), this, SLOT(searchUsr()));
     connect(m_pFlushFriendPB, SIGNAL(clicked(bool)), this, SLOT(flushFriend()));
     connect(m_pDelFriendPB, SIGNAL(clicked(bool)), this, SLOT(delFriend()));
+    connect(m_pPrivateChatPB, SIGNAL(clicked(bool)), this, SLOT(privateChat()));
 }
 
 void Friend::showAllOnlineUsr(PDU *pdu) {
@@ -65,6 +68,7 @@ void Friend::updateFriendList(PDU *pdu) {
     if (NULL == pdu) {
         return ;
     }
+    m_pFriendListWidget->clear();
     uint uiSize = pdu->uiMsgLen / 32;
     char caName[32] = {'\0'};
     for (uint i = 0; i < uiSize; i ++) {
@@ -121,5 +125,17 @@ void Friend::delFriend() {
         TcpClient::getInstance().getTcpSocket().write((char*)pdu, pdu->uiPDULen);
         free(pdu);
         pdu = NULL;
+    }
+}
+
+void Friend::privateChat() {
+    if (NULL != m_pFriendListWidget->currentItem()) {
+        QString strChatName = m_pFriendListWidget->currentItem()->text();
+        PrivateChat::getInstance().setChatName(strChatName); // 设置被私聊的那个人的名字
+        if (PrivateChat::getInstance().isHidden()) {
+            PrivateChat::getInstance().show();
+        }
+    } else {
+        QMessageBox::warning(this, "私聊", "请选择私聊对象");
     }
 }

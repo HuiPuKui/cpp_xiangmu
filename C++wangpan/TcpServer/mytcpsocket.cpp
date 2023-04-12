@@ -183,6 +183,13 @@ void MyTcpSocket::recvMsg() {
 
         break;
     }
+    case ENUM_MSG_TYPE_PRIVATE_CHAT_REQUEST : {
+        char caPerName[32] = {'\0'};
+        memcpy(caPerName, pdu->caData + 32, 32);
+//        qDebug() << caPerName;
+        MyTcpServer::getInstance().resend(caPerName, pdu);
+        break;
+    }
     default:
         break;
     }

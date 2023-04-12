@@ -21,6 +21,7 @@ void Online::showUsr(PDU *pdu) {                       // 显示用户
     if (NULL == pdu) {
         return ;
     }
+    ui->online_lw->clear();
     uint uiSize = pdu->uiMsgLen / 32;
 
     char caTmp[32];
