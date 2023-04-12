@@ -20,7 +20,7 @@ void OpeDB::init() {
         query.exec("select * from usrInfo");                                           // 执行命令
         while (query.next()) {
             QString data = QString("%1,%2,%3").arg(query.value(0).toString()).arg(query.value(1).toString()).arg(query.value(2).toString());
-            qDebug() << data;
+//            qDebug() << data;
         }
     } else {                                                                           // 如果打不开就弹出打开数据库失败
         QMessageBox::critical(NULL, "打开数据库", "打开数据库失败");
@@ -45,13 +45,13 @@ bool OpeDB::handleLogin(const char *name, const char *pwd) { // 处理上线
         return false;
     }
     QString data = QString("select * from usrInfo where name = \'%1\' and pwd = \'%2\' and online = 0;").arg(name).arg(pwd); // sql 语句
-    qDebug() << data;
+//    qDebug() << data;
     QSqlQuery query;
     query.exec(data);
     if (query.next()) { // 有下一条数据代表查询到一个人，因为用户名唯一
         // 将状态改为在线
         data = QString("update usrInfo set online = 1 where name = \'%1\' and pwd = \'%2\' and online = 0;").arg(name).arg(pwd); // sql 语句
-        qDebug() << data;
+//        qDebug() << data;
         QSqlQuery query;
         query.exec(data);
         return true;
@@ -62,7 +62,7 @@ bool OpeDB::handleLogin(const char *name, const char *pwd) { // 处理上线
 
 void OpeDB::handleOffline(const char *name) { // 处理下线
     if (NULL == name) {
-        qDebug() << "name is NULL";
+//        qDebug() << "name is NULL";
         return;
     }
     QString data = QString("update usrInfo set online = 0 where name = \'%1\';").arg(name);
@@ -120,7 +120,7 @@ int OpeDB::handleAddFriend(const char *pername, const char *name) {
     }
     QString data = QString("select * from friend where (id = (select id from usrInfo where name = \'%1\') and friendId = (select id from usrInfo where name = \'%2\')) "
                            "or (friendId = (select id from usrInfo where name = \'%3\') and id = (select id from usrInfo where name = \'%4\'));").arg(pername).arg(name).arg(name).arg(pername);
-    qDebug() << data;
+//    qDebug() << data;
     QSqlQuery query;
     query.exec(data);
 
@@ -132,14 +132,14 @@ int OpeDB::handleAddFriend(const char *pername, const char *name) {
         query.exec(data);
         if (query.next()) {
             int ret = query.value(0).toInt();
-            qDebug() << ret;
+//            qDebug() << ret;
             if (ret == 1) {
                 return 1; // 在线
             } else {
                 return 2; // 不在线
             }
         } else {
-            qDebug() << 3;
+//            qDebug() << 3;
             return 3;     // 用户名不存在
         }
     }
@@ -165,14 +165,26 @@ QStringList OpeDB::handleFlushFriend(const char *name) {
     query.exec(data);
     while (query.next()) {
         strFriendList.append(query.value(0).toString());
-        qDebug() << query.value(0).toString();
+//        qDebug() << query.value(0).toString();
     }
     query.clear();
     data = QString("select name from usrInfo where online = 1 and id in (select friendId from friend where id = (select id from usrInfo where name = \'%1\'));").arg(name);
     query.exec(data);
     while (query.next()) {
         strFriendList.append(query.value(0).toString());
-        qDebug() << query.value(0).toString();
+//        qDebug() << query.value(0).toString();
     }
     return strFriendList;
+}
+
+bool OpeDB::handleDelFriend(const char *name, const char *friendName) {
+    if (NULL == name || NULL == friendName) {
+        return false;
+    }
+    QString data = QString("delete from friend where (id = (select id from usrInfo where name = \'%1\') and friendId = (select id from usrInfo where name = \'%2\'));").arg(name).arg(friendName);
+    QSqlQuery query;
+    query.exec(data);
+    data = QString("delete from friend where (id = (select id from usrInfo where name = \'%1\') and friendId = (select id from usrInfo where name = \'%2\'));").arg(friendName).arg(name);
+    query.exec(data);
+    return true;
 }

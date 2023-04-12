@@ -30,8 +30,8 @@ void TcpClient::recvMsg() {
     uint uiMsgLen = uiPDULen - sizeof(PDU);                                  // 那么实际消息长度就是总的协议数据单元大小减去 sizeof(PDU)
     PDU *pdu = mkPDU(uiMsgLen);                                              // 因此在弹性结构体申请 uiMsgLen 大小的空间进行接收
     m_tcpSocket.read((char*)pdu + sizeof(uint), uiPDULen - sizeof(uint));    // 接收要在上个接受的之后，所以加一个偏移量
-    qDebug() << pdu->uiMsgType;
-    qDebug() << pdu->caData << ' ' << pdu->uiMsgType;
+//    qDebug() << pdu->uiMsgType;
+//    qDebug() << pdu->caData << ' ' << pdu->uiMsgType;
 //    qDebug() << ENUM_MSG_TYPE_MIN << ' ' << ENUM_MSG_TYPE_REGIST_REQUEST << ' ' << ENUM_MSG_TYPE_REGIST_RESPOND;
     switch (pdu->uiMsgType) {
     case ENUM_MSG_TYPE_REGIST_RESPOND: {                                     // 接收到注册返回信息
@@ -100,6 +100,16 @@ void TcpClient::recvMsg() {
     }
     case ENUM_MSG_TYPE_FLUSH_FRIEND_RESPOND : {
         OpeWidget::getInstance().getFriend()->updateFriendList(pdu);
+        break;
+    }
+    case ENUM_MSG_TYPE_DELETE_FRIEND_REQUEST : {
+        char caName[32] = {'\0'};
+        memcpy(caName, pdu->caData, 32);
+        QMessageBox::information(this, "删除好友", QString("%1 删除你作为他的好友").arg(caName));
+        break;
+    }
+    case ENUM_MSG_TYPE_DELETE_FRIEND_RESPOND : {
+        QMessageBox::information(this, "删除好友", "删除好友成功");
         break;
     }
     default:

@@ -25,6 +25,7 @@ public slots:
     void showOnline();
     void searchUsr();
     void flushFriend();
+    void delFriend();
 private:
     QTextEdit *m_pShowMsgTE;            // 显示信息
     QListWidget *m_pFriendListWidget;   // 显示好友列表

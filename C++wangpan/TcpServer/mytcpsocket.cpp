@@ -13,7 +13,7 @@ QString MyTcpSocket::getName() {
 }
 
 void MyTcpSocket::recvMsg() {
-    qDebug() << this->bytesAvailable();
+//    qDebug() << this->bytesAvailable();
     uint uiPDULen = 0;
     this->read((char*)&uiPDULen, sizeof(uint));                     // 首先读 sizeof(uint) 大小的字节，将 uiPDULen 读进来
     uint uiMsgLen = uiPDULen - sizeof(PDU);                         // 那么实际消息长度就是总的协议数据单元大小减去 sizeof(PDU)
@@ -25,7 +25,7 @@ void MyTcpSocket::recvMsg() {
         char caPwd[32] = {'\0'};
         strncpy(caName, pdu->caData, 32);                               // 提取用户名
         strncpy(caPwd, pdu->caData + 32, 32);                           // 提取密码
-        qDebug() << caName << ' ' << caPwd << ' ' << pdu->uiMsgType;
+//        qDebug() << caName << ' ' << caPwd << ' ' << pdu->uiMsgType;
         bool ret = OpeDB::getInstance().handleRegist(caName, caPwd);    // 把用户名、密码传给数据库，获得返回值
         PDU *respdu = mkPDU(0);
         respdu->uiMsgType = ENUM_MSG_TYPE_REGIST_RESPOND;
@@ -34,7 +34,7 @@ void MyTcpSocket::recvMsg() {
         } else {
             strcpy(respdu->caData, REGIST_FAILED);                      // 失败就传失败
         }
-        qDebug() << respdu->caData;
+//        qDebug() << respdu->caData;
         write((char*)respdu, respdu->uiPDULen);
         free(respdu);                                                   // 释放
         respdu = NULL;
@@ -54,7 +54,7 @@ void MyTcpSocket::recvMsg() {
         } else {
             strcpy(respdu->caData, LOGIN_FAILED);                      // 失败就传失败
         }
-        qDebug() << respdu->caData;
+//        qDebug() << respdu->caData;
         write((char*)respdu, respdu->uiPDULen);
         free(respdu);                                                   // 释放
         respdu = NULL;
@@ -126,7 +126,7 @@ void MyTcpSocket::recvMsg() {
             respdu = mkPDU(0);
             respdu->uiMsgType = ENUM_MSG_TYPE_ADD_FRIEND_RESPOND;
             strcpy(respdu->caData, ADD_FRIEND_NOEXIST);
-            qDebug() << respdu->caData;
+//            qDebug() << respdu->caData;
             write((char*)respdu, respdu->uiPDULen);                            // 发送数据
             free(respdu);                                                      // 释放
             respdu = NULL;
@@ -162,6 +162,25 @@ void MyTcpSocket::recvMsg() {
         write((char*)respdu, respdu->uiPDULen);
         free(respdu);
         respdu = NULL;
+        break;
+    }
+    case ENUM_MSG_TYPE_DELETE_FRIEND_REQUEST : {
+        char caSelfName[32] = {'\0'};
+        char caFriendName[32] = {'\0'};
+        strncpy(caSelfName, pdu->caData, 32);
+        strncpy(caFriendName, pdu->caData + 32, 32);
+        OpeDB::getInstance().handleDelFriend(caSelfName, caFriendName);
+
+        PDU *respdu = mkPDU(0);
+        respdu->uiMsgType = ENUM_MSG_TYPE_DELETE_FRIEND_RESPOND;
+        strcpy(respdu->caData, DEL_FRIEND_OK);
+
+        write((char*)respdu, respdu->uiPDULen);                 // 发送给删除人
+        free(respdu);
+        respdu = NULL;
+
+        MyTcpServer::getInstance().resend(caFriendName, pdu);   // 发送提示给被删除人
+
         break;
     }
     default:

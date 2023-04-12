@@ -42,7 +42,7 @@ void MyTcpServer::deleteSocket(MyTcpSocket *mysocket) {
             break;
         }
     }
-    for (int i = 0; i < m_tcpSocketList.size(); i ++) {                  // 输出目前还在的用户
-        qDebug() << m_tcpSocketList.at(i)->getName();
-    }
+//    for (int i = 0; i < m_tcpSocketList.size(); i ++) {                  // 输出目前还在的用户
+//        qDebug() << m_tcpSocketList.at(i)->getName();
+//    }
 }

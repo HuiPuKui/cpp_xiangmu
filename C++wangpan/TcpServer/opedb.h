@@ -22,6 +22,7 @@ public:
     int handleAddFriend(const char* pername, const char* name);         // 添加好友
     void handleAgreeAddFriend(const char *pername, const char *name);   // 同意添加好友
     QStringList handleFlushFriend(const char *name);                    // 刷新
+    bool handleDelFriend(const char *name, const char *friendName);     // 删除好友
 signals:
 
 public slots:
