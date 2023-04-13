@@ -45,6 +45,7 @@ void TcpClient::recvMsg() {
     }
     case ENUM_MSG_TYPE_LOGIN_RESPOND: {                                     // 接收到登录返回信息
         if (0 == strcmp(pdu->caData, LOGIN_OK)) {                           // 登录成功
+            m_strCurPath = QString("./%1").arg(m_strLoginName);
             QMessageBox::information(this, "登录", LOGIN_OK);
             OpeWidget::getInstance().show();                                // 显示跳转的窗口
             this->hide();                                                   // 隐藏登录界面
@@ -125,6 +126,10 @@ void TcpClient::recvMsg() {
 
         break;
     }
+    case ENUM_MSG_TYPE_GROUP_CHAT_REQUEST : {
+        OpeWidget::getInstance().getFriend()->updateGroupMsg(pdu);
+        break;
+    }
     default:
         break;
     }
@@ -161,6 +166,10 @@ QTcpSocket &TcpClient::getTcpSocket() {
 
 QString TcpClient::loginName() {
     return m_strLoginName;
+}
+
+QString TcpClient::curPath() {
+    return m_strCurPath;
 }
 
 void TcpClient::showConnect() { // 信号处理函数

@@ -31,6 +31,9 @@ void MyTcpSocket::recvMsg() {
         respdu->uiMsgType = ENUM_MSG_TYPE_REGIST_RESPOND;
         if (ret == true) {
             strcpy(respdu->caData, REGIST_OK);                          // 成功就传成功
+            QDir dir;
+            qDebug() << dir.mkdir(QString("./%1").arg(caName));                     // 创建目录
+
         } else {
             strcpy(respdu->caData, REGIST_FAILED);                      // 失败就传失败
         }
@@ -188,6 +191,17 @@ void MyTcpSocket::recvMsg() {
         memcpy(caPerName, pdu->caData + 32, 32);
 //        qDebug() << caPerName;
         MyTcpServer::getInstance().resend(caPerName, pdu);
+        break;
+    }
+    case ENUM_MSG_TYPE_GROUP_CHAT_REQUEST : {
+        char caName[32] = {'\0'};
+        strncpy(caName, pdu->caData, 32);
+        QStringList onlineFriend = OpeDB::getInstance().handleFlushFriend(caName); // 得到 caName 的所有在线好友
+        QString tmp;
+        for (int i = 0; i < onlineFriend.size(); i ++) {
+            tmp = onlineFriend.at(i);
+            MyTcpServer::getInstance().resend(tmp.toStdString().c_str(), pdu);
+        }
         break;
     }
     default:

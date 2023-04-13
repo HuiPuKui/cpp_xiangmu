@@ -3,6 +3,7 @@
 
 #include <QTcpSocket>
 #include "opedb.h"
+#include <QDir>
 
 class MyTcpSocket : public QTcpSocket {
     Q_OBJECT
