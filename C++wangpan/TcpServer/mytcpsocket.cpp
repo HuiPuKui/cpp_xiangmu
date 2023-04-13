@@ -2,6 +2,7 @@
 #include "protocol.h"
 #include <QDebug>
 #include "mytcpserver.h"
+#include <QDir>
 
 MyTcpSocket::MyTcpSocket() {                                  // 当 socket 有数据过来了就会发出 readyRead 信号
     connect(this, SIGNAL(readyRead()), this, SLOT(recvMsg())); // 用自己的 recvMsg 进行接收
@@ -202,6 +203,39 @@ void MyTcpSocket::recvMsg() {
             tmp = onlineFriend.at(i);
             MyTcpServer::getInstance().resend(tmp.toStdString().c_str(), pdu);
         }
+        break;
+    }
+    case ENUM_MSG_TYPE_CREATE_DIR_REQUEST : {
+        QDir dir;
+        QString strCurPath = QString("%1").arg((char*)(pdu->caMsg));
+        qDebug() << strCurPath;
+        bool ret = dir.exists(QString(strCurPath)); // 判断路径是否存在
+        PDU *respdu = NULL;
+        if (ret) {
+            char caNewDir[32] = {'\0'};
+            memcpy(caNewDir, pdu->caData + 32, 32);
+            QString strNewPath = strCurPath + "/" + caNewDir; // 新路径
+//            qDebug() << strNewPath;
+            ret = dir.exists(strNewPath);
+//            qDebug() << "->" << ret;
+            if (ret) { // 创建的文件名已经存在
+                respdu = mkPDU(0);
+                respdu->uiMsgType = ENUM_MSG_TYPE_CREATE_DIR_RESPOND;
+                strcpy(respdu->caData, FILE_NAME_EXIST);
+            } else {
+                dir.mkdir(strNewPath);
+                respdu = mkPDU(0);
+                respdu->uiMsgType = ENUM_MSG_TYPE_CREATE_DIR_RESPOND;
+                strcpy(respdu->caData, CREAT_DIR_OK);
+            }
+        } else {
+            respdu = mkPDU(0);
+            respdu->uiMsgType = ENUM_MSG_TYPE_CREATE_DIR_RESPOND;
+            strcpy(respdu->caData, DIR_NO_EXIST);
+        }
+        write((char*)respdu, respdu->uiPDULen);
+        free(respdu);
+        respdu = NULL;
         break;
     }
     default:

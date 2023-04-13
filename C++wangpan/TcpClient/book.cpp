@@ -57,7 +57,12 @@ void Book::createDir() {
             PDU *pdu = mkPDU(strCurPath.size() + 1);
             pdu->uiMsgType = ENUM_MSG_TYPE_CREATE_DIR_REQUEST;
             strncpy(pdu->caData, strName.toStdString().c_str(), strName.size());
-            strncpy(pdu->caData + 32, strCurPath.toStdString().c_str(), strCurPath.size());
+            strncpy(pdu->caData + 32, strNewDir.toStdString().c_str(), strNewDir.size());
+            memcpy(pdu->caMsg, strCurPath.toStdString().c_str(), strCurPath.size());
+
+            TcpClient::getInstance().getTcpSocket().write((char*)pdu, pdu->uiPDULen);
+            free(pdu);
+            pdu = NULL;
         }
 
     } else {

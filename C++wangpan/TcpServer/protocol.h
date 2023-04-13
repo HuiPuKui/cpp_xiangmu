@@ -1,3 +1,4 @@
+
 #ifndef PROTOCOL_H
 #define PROTOCOL_H
 
@@ -23,6 +24,10 @@ typedef unsigned int uint;
 #define ADD_FRIEND_NOEXIST "usr not exist"
 
 #define DEL_FRIEND_OK "delete friend ok"
+
+#define DIR_NO_EXIST "dir not exist"
+#define FILE_NAME_EXIST "file name exist"
+#define CREAT_DIR_OK "create dir ok"
 
 enum ENUM_MSG_TYPE {
     ENUM_MSG_TYPE_MIN = 0,

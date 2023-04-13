@@ -130,6 +130,10 @@ void TcpClient::recvMsg() {
         OpeWidget::getInstance().getFriend()->updateGroupMsg(pdu);
         break;
     }
+    case ENUM_MSG_TYPE_CREATE_DIR_RESPOND : {
+        QMessageBox::information(this, "创建文件", pdu->caData);
+        break;
+    }
     default:
         break;
     }
