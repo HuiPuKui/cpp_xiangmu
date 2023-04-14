@@ -7,18 +7,28 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include "protocol.h"
+#include <QTimer>
 
 class Book : public QWidget {
     Q_OBJECT
 public:
     explicit Book(QWidget *parent = nullptr);
     void updateFileList(const PDU *pdu);
+    void clearEnterDir();
+    QString enterDir();
 
 signals:
 
 public slots:
     void createDir();
     void flushFile();
+    void delDir();
+    void renameFile();
+    void enterDir(const QModelIndex &index);
+    void returnPre();
+    void uploadFile();
+
+    void uploadFileData();
 
 private:
     QListWidget *m_pBookListW;      // 文件夹列表
@@ -31,6 +41,11 @@ private:
     QPushButton *m_pDownLoadPB;     // 下载文件
     QPushButton *m_pDelFilePB;      // 删除文件
     QPushButton *m_pShareFilePB;    // 分享文件
+
+    QString m_strEnterDir;          // 当前文件名
+    QString m_strUploadFilePath;    // 打开的那个路径
+
+    QTimer *m_pTimer;               // 定时器
 };
 
 #endif // BOOK_H

@@ -29,6 +29,17 @@ typedef unsigned int uint;
 #define FILE_NAME_EXIST "file name exist"
 #define CREAT_DIR_OK "create dir ok"
 
+#define DEL_DIR_OK "delete dir ok"
+#define DEL_DIR_FAILURED "delete dir failured: is reguler file"
+
+#define RENAME_FILE_OK "rename file ok"
+#define RENAME_FILE_FAILURED "rename file failured"
+
+#define ENTER_DIR_FAILURED "enter dir failured: is reguler file"
+
+#define UPLOAD_FILE_OK "upload file ok"
+#define UPLOAD_FILE_FAILURED "upload file failured"
+
 enum ENUM_MSG_TYPE {
     ENUM_MSG_TYPE_MIN = 0,
     ENUM_MSG_TYPE_REGIST_REQUEST,       // 注册请求
@@ -66,6 +77,18 @@ enum ENUM_MSG_TYPE {
 
     ENUM_MSG_TYPE_FLUSH_FILE_REQUEST,   // 刷新文件请求
     ENUM_MSG_TYPE_FLUSH_FILE_RESPOND,   // 刷新文件回复
+
+    ENUM_MSG_TYPE_DEL_DIR_REQUEST,      // 删除目录请求
+    ENUM_MSG_TYPE_DEL_DIR_RESPOND,      // 删除目录回复
+
+    ENUM_MSG_TYPE_RENAME_FILE_REQUEST,  // 重命名文件请求
+    ENUM_MSG_TYPE_RENAME_FILE_RESPOND,  // 重命名文件回复
+
+    ENUM_MSG_TYPE_ENTER_DIR_REQUEST,    // 进入文件夹请求
+    ENUM_MSG_TYPE_ENTER_DIR_RESPOND,    // 进入文件夹回复
+
+    ENUM_MSG_TYPE_UPLOAD_FILE_REQUEST,  // 上传文件请求
+    ENUM_MSG_TYPE_UPLOAD_FILE_RESPOND,  // 上传文件回复
 
 //    ENUM_MSG_TYPE_REQUEST,
 //    ENUM_MSG_TYPE_RESPOND,
