@@ -23,8 +23,10 @@ typedef unsigned int uint;
 #define ADD_FRIEND_NOEXIST "usr not exist"
 
 #define DEL_FRIEND_OK "delete friend ok"
+
 #define DIR_NO_EXIST "dir not exist"
 #define FILE_NAME_EXIST "file name exist"
+#define CREAT_DIR_OK "create dir ok"
 
 enum ENUM_MSG_TYPE {
     ENUM_MSG_TYPE_MIN = 0,
@@ -61,7 +63,15 @@ enum ENUM_MSG_TYPE {
     ENUM_MSG_TYPE_CREATE_DIR_REQUEST,   // 创建路径请求
     ENUM_MSG_TYPE_CREATE_DIR_RESPOND,   // 创建路径回复
 
+    ENUM_MSG_TYPE_FLUSH_FILE_REQUEST,   // 刷新文件请求
+    ENUM_MSG_TYPE_FLUSH_FILE_RESPOND,   // 刷新文件回复
+
     ENUM_MSG_TYPE_MAX = 0x00ffffff
+};
+
+struct FileInfo {
+    char caFileName[32];    // 文件名字
+    int iFileType;      // 文件类型
 };
 
 struct PDU {            // 协议数据单元

@@ -43,6 +43,20 @@ Book::Book(QWidget *parent) : QWidget(parent) {
     setLayout(pMain);
 
     connect(m_pCreateDirPB, SIGNAL(clicked(bool)), this, SLOT(createDir()));
+    connect(m_pFlushFilePB, SIGNAL(clicked(bool)), this, SLOT(flushFile()));
+}
+
+void Book::updateFileList(const PDU *pdu) {
+    if (NULL == pdu) {
+        return ;
+    }
+    FileInfo *pFileInfo = NULL;
+    int icount = pdu->uiMsgLen / sizeof(FileInfo);
+    for (int i = 0; i < icount; i ++) {
+        pFileInfo = (FileInfo*)(pdu->caMsg) + i;
+        qDebug() << pFileInfo->caFileName
+                 << pFileInfo->iFileType;
+    }
 }
 
 void Book::createDir() {
@@ -68,4 +82,14 @@ void Book::createDir() {
     } else {
         QMessageBox::warning(this, "新建文件夹", "新文件夹名字不能为空");
     }
+}
+
+void Book::flushFile() {
+    QString strCurPath = TcpClient::getInstance().curPath();
+    PDU *pdu = mkPDU(strCurPath.size() + 1);
+    pdu->uiMsgType = ENUM_MSG_TYPE_FLUSH_FILE_REQUEST;
+    strncpy((char*)(pdu->caMsg), strCurPath.toStdString().c_str(), strCurPath.size());
+    TcpClient::getInstance().getTcpSocket().write((char*)pdu, pdu->uiPDULen);
+    free(pdu);
+    pdu = NULL;
 }

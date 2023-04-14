@@ -64,6 +64,9 @@ enum ENUM_MSG_TYPE {
     ENUM_MSG_TYPE_CREATE_DIR_REQUEST,   // 创建路径请求
     ENUM_MSG_TYPE_CREATE_DIR_RESPOND,   // 创建路径回复
 
+    ENUM_MSG_TYPE_FLUSH_FILE_REQUEST,   // 刷新文件请求
+    ENUM_MSG_TYPE_FLUSH_FILE_RESPOND,   // 刷新文件回复
+
 //    ENUM_MSG_TYPE_REQUEST,
 //    ENUM_MSG_TYPE_RESPOND,
 //    ENUM_MSG_TYPE_REQUEST,
@@ -73,6 +76,11 @@ enum ENUM_MSG_TYPE {
 //    ENUM_MSG_TYPE_REQUEST,
 //    ENUM_MSG_TYPE_RESPOND,
     ENUM_MSG_TYPE_MAX = 0x00ffffff
+};
+
+struct FileInfo {
+    char caFileName[32];    // 文件名字
+    int iFileType;      // 文件类型
 };
 
 struct PDU {            // 协议数据单元

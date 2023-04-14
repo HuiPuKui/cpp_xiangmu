@@ -12,11 +12,13 @@ class Book : public QWidget {
     Q_OBJECT
 public:
     explicit Book(QWidget *parent = nullptr);
+    void updateFileList(const PDU *pdu);
 
 signals:
 
 public slots:
     void createDir();
+    void flushFile();
 
 private:
     QListWidget *m_pBookListW;      // 文件夹列表
