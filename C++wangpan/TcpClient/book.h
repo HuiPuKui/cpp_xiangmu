@@ -16,6 +16,12 @@ public:
     void updateFileList(const PDU *pdu);
     void clearEnterDir();
     QString enterDir();
+    void setDownloadStatus(bool status);
+    bool getDownloadStatus();
+    QString getSaveFilePath();
+
+    qint64 m_iTotal;        // 总的文件大小
+    qint64 m_iRecved;       // 已经收到的文件大小
 
 signals:
 
@@ -26,9 +32,12 @@ public slots:
     void renameFile();
     void enterDir(const QModelIndex &index);
     void returnPre();
+    void delRegFile();
     void uploadFile();
 
     void uploadFileData();
+
+    void downloadFile();
 
 private:
     QListWidget *m_pBookListW;      // 文件夹列表
@@ -46,6 +55,8 @@ private:
     QString m_strUploadFilePath;    // 打开的那个路径
 
     QTimer *m_pTimer;               // 定时器
+    QString m_strSaveFilePath;      // 保存路径
+    bool m_bDownload;               // 是否处于下载状态
 };
 
 #endif // BOOK_H

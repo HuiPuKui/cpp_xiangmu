@@ -8,6 +8,8 @@ MyTcpSocket::MyTcpSocket() {                                  // 当 socket 有�
     connect(this, SIGNAL(readyRead()), this, SLOT(recvMsg())); // 用自己的 recvMsg 进行接收
     connect(this, SIGNAL(disconnected()), this, SLOT(clientOffline()));
     m_bUpload = false;
+    m_pTimer = new QTimer;
+    connect(m_pTimer, SIGNAL(timeout()), this, SLOT(sendFileToClient()));
 }
 
 QString MyTcpSocket::getName() {
@@ -391,6 +393,63 @@ void MyTcpSocket::recvMsg() {
             }
             break;
         }
+        case ENUM_MSG_TYPE_DEL_FILE_REQUEST : {
+            char caName[32] = {'\0'};
+            strcpy(caName, pdu->caData);
+            char *pPath = new char[pdu->uiMsgLen];
+            memcpy(pPath, pdu->caMsg, pdu->uiMsgLen);
+            QString strPath = QString("%1/%2").arg(pPath).arg(caName); // 拼接要删除的路径
+//            qDebug() << strPath;
+            QFileInfo fileInfo(strPath);
+            bool ret = false;
+            if (fileInfo.isDir()) { // 文件夹
+                ret = false;
+            } else if (fileInfo.isFile()) { // 常规文件
+                QDir dir;
+                ret = dir.remove(strPath);
+            }
+            PDU *respdu = NULL;
+            if (ret) {
+                respdu = mkPDU(strlen(DEL_FILE_OK) + 1);
+                memcpy(respdu->caData, DEL_FILE_OK, strlen(DEL_FILE_OK));
+                respdu->uiMsgType = ENUM_MSG_TYPE_DEL_FILE_RESPOND;
+
+            } else {
+                respdu = mkPDU(strlen(DEL_FILE_FAILURED) + 1);
+                memcpy(respdu->caData, DEL_FILE_FAILURED, strlen(DEL_FILE_FAILURED));
+                respdu->uiMsgType = ENUM_MSG_TYPE_DEL_FILE_RESPOND;
+            }
+            write((char*)respdu, respdu->uiPDULen);
+            free(respdu);
+            respdu = NULL;
+            break;
+        }
+        case ENUM_MSG_TYPE_DOWNLOAD_FILE_REQUEST : {
+            char caFileName[32] = {'\0'};
+            strcpy(caFileName, pdu->caData);
+            char *pPath = new char[pdu->uiMsgLen];
+            memcpy(pPath, pdu->caMsg, pdu->uiMsgLen);
+            QString strPath = QString("%1/%2").arg(pPath).arg(caFileName);
+            qDebug() << strPath;
+            delete [] pPath;
+            pPath = NULL;
+
+            QFileInfo fileInfo(strPath);
+            qint64 fileSize = fileInfo.size();
+            PDU *respdu = mkPDU(0);
+            sprintf(respdu->caData, "%s %lld", caFileName, fileSize);
+            respdu->uiMsgType = ENUM_MSG_TYPE_DOWNLOAD_FILE_RESPOND;
+
+            write((char*)respdu, respdu->uiPDULen);
+            free(respdu);
+            respdu = NULL;
+
+            m_file.setFileName(strPath);
+            m_file.open(QIODevice::ReadOnly);
+            m_pTimer->start(1000);
+
+            break;
+        }
         default:
             break;
         }
@@ -428,4 +487,24 @@ void MyTcpSocket::recvMsg() {
 void MyTcpSocket::clientOffline() {
     OpeDB::getInstance().handleOffline(m_strName.toStdString().c_str());
     emit offline(this);
+}
+
+void MyTcpSocket::sendFileToClient() {
+    char *pData = new char[4096];
+    qint64 ret = 0;
+    while (true) {
+        ret = m_file.read(pData, 4096);
+        if (ret > 0 && ret <= 4096) {
+            write(pData, ret);
+        } else if (0 == ret) {
+            m_file.close();
+            break;
+        } else if (ret < 0) {
+            qDebug() << "发送文件内容给客户端过程中失败";
+            m_file.close();
+            break;
+        }
+    }
+    delete [] pData;
+    pData = NULL;
 }

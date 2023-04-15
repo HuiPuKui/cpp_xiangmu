@@ -11,7 +11,7 @@
  */
 
 Book::Book(QWidget *parent) : QWidget(parent) {
-
+    m_bDownload = false;
     m_strEnterDir.clear();
     m_pTimer = new QTimer;
 
@@ -55,6 +55,8 @@ Book::Book(QWidget *parent) : QWidget(parent) {
     connect(m_pReturnPB, SIGNAL(clicked(bool)), this, SLOT(returnPre()));
     connect(m_pUploadPB, SIGNAL(clicked(bool)), this, SLOT(uploadFile()));
     connect(m_pTimer, SIGNAL(timeout()), this, SLOT(uploadFileData()));
+    connect(m_pDelFilePB, SIGNAL(clicked(bool)), this, SLOT(delRegFile()));
+    connect(m_pDownLoadPB, SIGNAL(clicked(bool)), this, SLOT(downloadFile()));
 }
 
 void Book::updateFileList(const PDU *pdu) {
@@ -92,6 +94,18 @@ void Book::clearEnterDir() {
 
 QString Book::enterDir() {
     return m_strEnterDir;
+}
+
+void Book::setDownloadStatus(bool status) {
+    m_bDownload = status;
+}
+
+bool Book::getDownloadStatus() {
+    return m_bDownload;
+}
+
+QString Book::getSaveFilePath() {
+    return m_strSaveFilePath;
 }
 
 void Book::createDir() {
@@ -198,6 +212,23 @@ void Book::returnPre() {
     }
 }
 
+void Book::delRegFile() {
+    QString strCurPath = TcpClient::getInstance().curPath();
+    QListWidgetItem *pItem = m_pBookListW->currentItem();
+    if (NULL == pItem) {
+        QMessageBox::warning(this, "删除文件", "请选择要删除的文件");
+    } else {
+        QString strDelName = pItem->text();
+        PDU *pdu = mkPDU(strCurPath.size() + 1);
+        pdu->uiMsgType = ENUM_MSG_TYPE_DEL_FILE_REQUEST;
+        strncpy(pdu->caData, strDelName.toStdString().c_str(), strDelName.size());
+        memcpy(pdu->caMsg, strCurPath.toStdString().c_str(), strCurPath.size());
+        TcpClient::getInstance().getTcpSocket().write((char*)pdu, pdu->uiPDULen);
+        free(pdu);
+        pdu = NULL;
+    }
+}
+
 void Book::uploadFile() {
 
     m_strUploadFilePath = QFileDialog::getOpenFileName();
@@ -250,4 +281,30 @@ void Book::uploadFileData() {
     file.close();
     delete [] pBuffer;
     pBuffer = NULL;
+}
+
+void Book::downloadFile() {
+    QListWidgetItem *pItem = m_pBookListW->currentItem();
+    if (NULL == pItem) {
+        QMessageBox::warning(this, "下载文件", "请选择要下载的文件");
+    } else {
+        QString strSaveFilePath = QFileDialog::getSaveFileName();
+        if (strSaveFilePath == NULL) {
+            QMessageBox::warning(this, "下载文件", "请指定要保存的位置");
+            m_strSaveFilePath.clear();
+        } else {
+            m_strSaveFilePath = strSaveFilePath;
+        }
+
+        QString strCurPath = TcpClient::getInstance().curPath(); // 路径
+        PDU *pdu = mkPDU(strCurPath.size() + 1);
+        pdu->uiMsgType = ENUM_MSG_TYPE_DOWNLOAD_FILE_REQUEST;
+        QString strFileName = pItem->text();
+        strcpy(pdu->caData, strFileName.toStdString().c_str());
+        memcpy(pdu->caMsg, strCurPath.toStdString().c_str(), strCurPath.size());
+
+        TcpClient::getInstance().getTcpSocket().write((char*)pdu, pdu->uiPDULen);
+        free(pdu);
+        pdu = NULL;
+    }
 }

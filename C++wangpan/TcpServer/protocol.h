@@ -40,6 +40,9 @@ typedef unsigned int uint;
 #define UPLOAD_FILE_OK "upload file ok"
 #define UPLOAD_FILE_FAILURED "upload file failured"
 
+#define DEL_FILE_OK "delete file ok"
+#define DEL_FILE_FAILURED "delete file failured: is directory"
+
 enum ENUM_MSG_TYPE {
     ENUM_MSG_TYPE_MIN = 0,
     ENUM_MSG_TYPE_REGIST_REQUEST,       // 注册请求
@@ -90,14 +93,12 @@ enum ENUM_MSG_TYPE {
     ENUM_MSG_TYPE_UPLOAD_FILE_REQUEST,  // 上传文件请求
     ENUM_MSG_TYPE_UPLOAD_FILE_RESPOND,  // 上传文件回复
 
-//    ENUM_MSG_TYPE_REQUEST,
-//    ENUM_MSG_TYPE_RESPOND,
-//    ENUM_MSG_TYPE_REQUEST,
-//    ENUM_MSG_TYPE_RESPOND,
-//    ENUM_MSG_TYPE_REQUEST,
-//    ENUM_MSG_TYPE_RESPOND,
-//    ENUM_MSG_TYPE_REQUEST,
-//    ENUM_MSG_TYPE_RESPOND,
+    ENUM_MSG_TYPE_DEL_FILE_REQUEST,     // 删除常规文件请求
+    ENUM_MSG_TYPE_DEL_FILE_RESPOND,     // 删除常规文件回复
+
+    ENUM_MSG_TYPE_DOWNLOAD_FILE_REQUEST,// 下载文件请求
+    ENUM_MSG_TYPE_DOWNLOAD_FILE_RESPOND,// 下载文件回复
+
     ENUM_MSG_TYPE_MAX = 0x00ffffff
 };
 

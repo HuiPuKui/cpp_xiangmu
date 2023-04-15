@@ -42,6 +42,7 @@ private:
     QString m_strLoginName;
 
     QString m_strCurPath; // 当前路径
+    QFile m_file;
 };
 
 #endif // TCPCLIENT_H
