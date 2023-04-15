@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_Book_t {
-    QByteArrayData data[14];
-    char stringdata0[131];
+    QByteArrayData data[15];
+    char stringdata0[141];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -44,13 +44,14 @@ QT_MOC_LITERAL(9, 71, 9), // "returnPre"
 QT_MOC_LITERAL(10, 81, 10), // "delRegFile"
 QT_MOC_LITERAL(11, 92, 10), // "uploadFile"
 QT_MOC_LITERAL(12, 103, 14), // "uploadFileData"
-QT_MOC_LITERAL(13, 118, 12) // "downloadFile"
+QT_MOC_LITERAL(13, 118, 12), // "downloadFile"
+QT_MOC_LITERAL(14, 131, 9) // "shareFile"
 
     },
     "Book\0createDir\0\0flushFile\0delDir\0"
     "renameFile\0enterDir\0QModelIndex\0index\0"
     "returnPre\0delRegFile\0uploadFile\0"
-    "uploadFileData\0downloadFile"
+    "uploadFileData\0downloadFile\0shareFile"
 };
 #undef QT_MOC_LITERAL
 
@@ -60,7 +61,7 @@ static const uint qt_meta_data_Book[] = {
        8,       // revision
        0,       // classname
        0,    0, // classinfo
-      10,   14, // methods
+      11,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -68,16 +69,17 @@ static const uint qt_meta_data_Book[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,   64,    2, 0x0a /* Public */,
-       3,    0,   65,    2, 0x0a /* Public */,
-       4,    0,   66,    2, 0x0a /* Public */,
-       5,    0,   67,    2, 0x0a /* Public */,
-       6,    1,   68,    2, 0x0a /* Public */,
-       9,    0,   71,    2, 0x0a /* Public */,
-      10,    0,   72,    2, 0x0a /* Public */,
-      11,    0,   73,    2, 0x0a /* Public */,
-      12,    0,   74,    2, 0x0a /* Public */,
-      13,    0,   75,    2, 0x0a /* Public */,
+       1,    0,   69,    2, 0x0a /* Public */,
+       3,    0,   70,    2, 0x0a /* Public */,
+       4,    0,   71,    2, 0x0a /* Public */,
+       5,    0,   72,    2, 0x0a /* Public */,
+       6,    1,   73,    2, 0x0a /* Public */,
+       9,    0,   76,    2, 0x0a /* Public */,
+      10,    0,   77,    2, 0x0a /* Public */,
+      11,    0,   78,    2, 0x0a /* Public */,
+      12,    0,   79,    2, 0x0a /* Public */,
+      13,    0,   80,    2, 0x0a /* Public */,
+      14,    0,   81,    2, 0x0a /* Public */,
 
  // slots: parameters
     QMetaType::Void,
@@ -85,6 +87,7 @@ static const uint qt_meta_data_Book[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void, 0x80000000 | 7,    8,
+    QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -110,6 +113,7 @@ void Book::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void *
         case 7: _t->uploadFile(); break;
         case 8: _t->uploadFileData(); break;
         case 9: _t->downloadFile(); break;
+        case 10: _t->shareFile(); break;
         default: ;
         }
     }
@@ -144,13 +148,13 @@ int Book::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 10)
+        if (_id < 11)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 10;
+        _id -= 11;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 10)
+        if (_id < 11)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 10;
+        _id -= 11;
     }
     return _id;
 }

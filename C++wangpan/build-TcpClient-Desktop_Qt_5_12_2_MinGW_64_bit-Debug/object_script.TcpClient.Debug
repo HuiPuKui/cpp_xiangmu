@@ -6,6 +6,7 @@ debug/online.o
 debug/friend.o
 debug/book.o
 debug/privatechat.o
+debug/sharefile.o
 debug/qrc_config.o
 debug/qrc_filetype.o
 debug/moc_tcpclient.o
@@ -14,3 +15,4 @@ debug/moc_online.o
 debug/moc_friend.o
 debug/moc_book.o
 debug/moc_privatechat.o
+debug/moc_sharefile.o

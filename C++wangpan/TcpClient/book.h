@@ -39,6 +39,8 @@ public slots:
 
     void downloadFile();
 
+    void shareFile();
+
 private:
     QListWidget *m_pBookListW;      // 文件夹列表
     QPushButton *m_pReturnPB;       // 返回

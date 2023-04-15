@@ -3,6 +3,8 @@
 #include <QInputDialog>
 #include <QMessageBox>
 #include <QFileDialog>
+#include "opewidget.h"
+#include <sharefile.h>
 
 /*
  *
@@ -57,6 +59,7 @@ Book::Book(QWidget *parent) : QWidget(parent) {
     connect(m_pTimer, SIGNAL(timeout()), this, SLOT(uploadFileData()));
     connect(m_pDelFilePB, SIGNAL(clicked(bool)), this, SLOT(delRegFile()));
     connect(m_pDownLoadPB, SIGNAL(clicked(bool)), this, SLOT(downloadFile()));
+    connect(m_pShareFilePB, SIGNAL(clicked(bool)), this, SLOT(shareFile()));
 }
 
 void Book::updateFileList(const PDU *pdu) {
@@ -306,5 +309,15 @@ void Book::downloadFile() {
         TcpClient::getInstance().getTcpSocket().write((char*)pdu, pdu->uiPDULen);
         free(pdu);
         pdu = NULL;
+    }
+}
+
+void Book::shareFile() {
+    Friend *pFriend = OpeWidget::getInstance().getFriend(); // 返回好友界面的指针
+    QListWidget *pFriendList = pFriend->getFriendList();
+
+    ShareFile::getInstance().updateFriend(pFriendList);
+    if (ShareFile::getInstance().isHidden()) {
+        ShareFile::getInstance().show();
     }
 }

@@ -20,6 +20,8 @@ public:
 
     QString m_strSearchName;
 
+    QListWidget *getFriendList();
+
 signals:
 
 public slots:
