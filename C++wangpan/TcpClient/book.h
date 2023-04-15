@@ -19,6 +19,7 @@ public:
     void setDownloadStatus(bool status);
     bool getDownloadStatus();
     QString getSaveFilePath();
+    QString getShareFileName();
 
     qint64 m_iTotal;        // 总的文件大小
     qint64 m_iRecved;       // 已经收到的文件大小
@@ -59,6 +60,8 @@ private:
     QTimer *m_pTimer;               // 定时器
     QString m_strSaveFilePath;      // 保存路径
     bool m_bDownload;               // 是否处于下载状态
+
+    QString m_strShareFileName;     // 要分享的文件名
 };
 
 #endif // BOOK_H

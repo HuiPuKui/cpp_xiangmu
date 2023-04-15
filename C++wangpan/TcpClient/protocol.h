@@ -100,6 +100,8 @@ enum ENUM_MSG_TYPE {
 
     ENUM_MSG_TYPE_SHARE_FILE_REQUEST,   // 共享文件请求
     ENUM_MSG_TYPE_SHARE_FILE_RESPOND,   // 共享文件回复
+    ENUM_MSG_TYPE_SHARE_FILE_NOTE,      // 共享文件通知
+    ENUM_MSG_TYPE_SHARE_FILE_NOTE_RESPOND, // 共享文件通知回复
 
     ENUM_MSG_TYPE_MAX = 0x00ffffff
 };

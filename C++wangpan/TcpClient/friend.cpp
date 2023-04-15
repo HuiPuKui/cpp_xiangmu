@@ -69,7 +69,7 @@ void Friend::updateFriendList(PDU *pdu) {
     if (NULL == pdu) {
         return ;
     }
-    m_pFriendListWidget->clear();
+
     uint uiSize = pdu->uiMsgLen / 32;
     char caName[32] = {'\0'};
     for (uint i = 0; i < uiSize; i ++) {
@@ -115,6 +115,7 @@ void Friend::searchUsr() { // 搜索用户
 }
 
 void Friend::flushFriend() {
+    m_pFriendListWidget->clear();
     QString strName = TcpClient::getInstance().loginName();
     PDU *pdu = mkPDU(0);
     pdu->uiMsgType = ENUM_MSG_TYPE_FLUSH_FRIEND_REQUEST;

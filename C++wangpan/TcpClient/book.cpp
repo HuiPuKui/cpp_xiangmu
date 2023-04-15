@@ -111,6 +111,10 @@ QString Book::getSaveFilePath() {
     return m_strSaveFilePath;
 }
 
+QString Book::getShareFileName() {
+    return m_strShareFileName;
+}
+
 void Book::createDir() {
     QString strNewDir = QInputDialog::getText(this, "新建文件夹", "新文件夹名字"); // 新文件夹名
     if (!strNewDir.isEmpty()) {
@@ -313,6 +317,13 @@ void Book::downloadFile() {
 }
 
 void Book::shareFile() {
+    QListWidgetItem *pItem = m_pBookListW->currentItem();
+    if (NULL == pItem) {
+        QMessageBox::warning(this, "分享文件", "请选择要分享的文件");
+        return ;
+    } else {
+        m_strShareFileName = pItem->text();
+    }
     Friend *pFriend = OpeWidget::getInstance().getFriend(); // 返回好友界面的指针
     QListWidget *pFriendList = pFriend->getFriendList();
 

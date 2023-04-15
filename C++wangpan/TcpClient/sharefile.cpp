@@ -1,5 +1,8 @@
 #include "sharefile.h"
 #include <QDebug>
+#include "tcpclient.h"
+#include "opewidget.h"
+#include "protocol.h"
 
 ShareFile::ShareFile(QWidget *parent) : QWidget(parent) {
     m_pSelectAllPB = new QPushButton("全选");         // 全选
@@ -32,6 +35,8 @@ ShareFile::ShareFile(QWidget *parent) : QWidget(parent) {
 
     connect(m_pCancelSelectPB, SIGNAL(clicked(bool)), this, SLOT(cancelSelect()));
     connect(m_pSelectAllPB, SIGNAL(clicked(bool)), this, SLOT(selectAll()));
+    connect(m_pOKPB, SIGNAL(clicked(bool)), this, SLOT(okShare()));
+    connect(m_pCancelPB, SIGNAL(clicked(bool)), this, SLOT(cancelShare()));
 }
 
 ShareFile &ShareFile::getInstance() {
@@ -57,7 +62,7 @@ void ShareFile::updateFriend(QListWidget *pFriendList) {
     QAbstractButton *tmp = NULL;
     QList<QAbstractButton*> preFriendList = m_pButtonGroup->buttons();
 
-    qDebug() << preFriendList.size();
+//    qDebug() << preFriendList.size();
 
     for (int i = 0; i < preFriendList.size(); i ++) {
         tmp = preFriendList[i];
@@ -68,7 +73,7 @@ void ShareFile::updateFriend(QListWidget *pFriendList) {
         tmp = NULL;
     }
 
-    qDebug() << pFriendList->count();
+//    qDebug() << pFriendList->count();
 
     QCheckBox *pCB = NULL;
     for (int i = 0; i < pFriendList->count(); i ++) {
@@ -97,4 +102,41 @@ void ShareFile::selectAll() {
             cbList[i]->setChecked(true);
         }
     }
+}
+
+void ShareFile::okShare() {
+    QString strName = TcpClient::getInstance().loginName();
+    QString strCurPath = TcpClient::getInstance().curPath();
+    QString strShareFileName = OpeWidget::getInstance().getBook()->getShareFileName();
+
+    QString strPath = strCurPath + "/" + strShareFileName;
+
+    QList<QAbstractButton*> cbList = m_pButtonGroup->buttons();
+    int num = 0;
+    for (int i = 0; i < cbList.size(); i ++) {
+        if (cbList[i]->isChecked()) {
+            num ++;
+        }
+    }
+
+    PDU *pdu = mkPDU(32 * num + strPath.size() + 1);
+    pdu->uiMsgType = ENUM_MSG_TYPE_SHARE_FILE_REQUEST;
+    sprintf(pdu->caData, "%s %d", strName.toStdString().c_str(), num);
+    int j = 0;
+    for (int i = 0; i < cbList.size(); i ++) {
+        if (cbList[i]->isChecked()) {
+            memcpy((char*)(pdu->caMsg) + j * 32, cbList[i]->text().toStdString().c_str(), cbList[i]->text().size());
+            j ++;
+        }
+    }
+
+    memcpy((char*)(pdu->caMsg) + num * 32, strPath.toStdString().c_str(), strPath.size());
+
+    TcpClient::getInstance().getTcpSocket().write((char*)pdu, pdu->uiPDULen);
+    free(pdu);
+    pdu = NULL;
+}
+
+void ShareFile::cancelShare() {
+    hide();
 }

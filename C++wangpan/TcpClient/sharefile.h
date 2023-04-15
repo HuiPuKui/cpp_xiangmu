@@ -28,6 +28,9 @@ public slots:
     void cancelSelect();
     void selectAll();
 
+    void okShare();
+    void cancelShare();
+
 private:
     QPushButton *m_pSelectAllPB;    // 全选
     QPushButton *m_pCancelSelectPB; // 取消全选
