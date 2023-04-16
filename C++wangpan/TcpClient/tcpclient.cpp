@@ -203,6 +203,11 @@ void TcpClient::recvMsg() {
             }
             break;
         }
+        case ENUM_MSG_TYPE_MOVE_FILE_RESPOND : {
+            qDebug() << pdu->caData;
+            QMessageBox::information(this, "移动文件", pdu->caData);
+            break;
+        }
         default:
             break;
         }

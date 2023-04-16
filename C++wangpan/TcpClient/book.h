@@ -41,6 +41,8 @@ public slots:
     void downloadFile();
 
     void shareFile();
+    void moveFile();
+    void selectDestDir();
 
 private:
     QListWidget *m_pBookListW;      // 文件夹列表
@@ -53,6 +55,8 @@ private:
     QPushButton *m_pDownLoadPB;     // 下载文件
     QPushButton *m_pDelFilePB;      // 删除文件
     QPushButton *m_pShareFilePB;    // 分享文件
+    QPushButton *m_pMoveFilePB;     // 移动文件
+    QPushButton *m_pSelectDirPB;    // 选择文件夹按钮
 
     QString m_strEnterDir;          // 当前文件名
     QString m_strUploadFilePath;    // 打开的那个路径
@@ -62,6 +66,10 @@ private:
     bool m_bDownload;               // 是否处于下载状态
 
     QString m_strShareFileName;     // 要分享的文件名
+
+    QString m_strMoveFileName;      // 要移动的文件名
+    QString m_strMoveFilePath;      // 要移动的文件的路径
+    QString m_strDestDir;
 };
 
 #endif // BOOK_H
